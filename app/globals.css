@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --surface: #f6f8fb;
+  --surface-elevated: #ffffff;
+  --ink: #0f172a;
+  --muted: #475569;
+  --brand: #f97316;
+  --brand-deep: #ea580c;
+  --ocean: #0ea5e9;
+  --ocean-deep: #0369a1;
+  --ring: color-mix(in oklab, var(--brand) 35%, white);
+}
+
+@theme inline {
+  --font-sans: var(--font-outfit);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-ocean: var(--ocean);
+  --color-ocean-deep: var(--ocean-deep);
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--brand) 35%, transparent);
+}
