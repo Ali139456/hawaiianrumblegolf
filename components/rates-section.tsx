@@ -85,6 +85,12 @@ export function RatesSection() {
             <div className="px-5 py-8 sm:px-10 sm:py-10">
               <StaggerRoot className="grid gap-8 md:grid-cols-2 md:gap-10 lg:gap-14">
                 <div className="flex flex-col gap-4">
+                  <div className="border-b border-white/10 pb-4">
+                    <p className="text-sm font-bold uppercase tracking-[0.18em] text-amber-400 sm:text-base sm:tracking-[0.2em]">
+                      {rates.leftColumnTitle}
+                    </p>
+                    <p className="mt-1.5 text-sm italic text-slate-400">{rates.leftColumnSub}</p>
+                  </div>
                   {rates.leftColumn.map((item, i) => (
                     <MotionItem key={item.label} index={i}>
                       <TicketRow item={item} />
@@ -92,6 +98,12 @@ export function RatesSection() {
                   ))}
                 </div>
                 <div className="flex flex-col gap-4">
+                  <div className="border-b border-white/10 pb-4">
+                    <p className="text-sm font-bold uppercase tracking-[0.18em] text-amber-400 sm:text-base sm:tracking-[0.2em]">
+                      {rates.rightColumnTitle}
+                    </p>
+                    <p className="mt-1.5 text-sm italic text-slate-400">{rates.rightColumnSub}</p>
+                  </div>
                   {rates.rightColumn.map((item, i) => (
                     <MotionItem key={item.label} index={i + rates.leftColumn.length}>
                       <TicketRow item={item} />

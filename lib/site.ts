@@ -21,18 +21,22 @@ export const site = {
     weekend: "Friday & Saturday | 10:00 AM – 11:30 PM",
   },
   rates: {
-    title: "Ticket rates",
+    title: "Rates",
+    leftColumnTitle: "Single rates",
+    leftColumnSub: "Per person",
+    rightColumnTitle: "Group rates",
+    rightColumnSub: "Per person",
     leftColumn: [
       {
         label: "1st game",
         detail: "Per person",
-        price: "14.95",
+        price: "15.95",
         pricePrefix: "",
       },
       {
         label: "2nd game",
-        detail: "Replay the fun the same day",
-        price: "7.95",
+        detail: "Per person, same day",
+        price: "9.95",
         pricePrefix: "",
         badge: "Popular",
         highlight: true,
@@ -41,14 +45,15 @@ export const site = {
     rightColumn: [
       {
         label: "Group rate",
-        detail: "Per person, minimum 20 people",
-        price: "11.95",
+        detail: "Minimum of 20 people for group rates",
+        price: "12.95",
         pricePrefix: "",
-        cta: { href: "#contact", label: "Plan a group outing" },
+        cta: { href: "#contact", label: "Contact us for more information" },
       },
     ],
     footnotes: [
-      "Walk-ins welcome. Ask about specials for military, seniors, Florida residents, and Disney & Universal cast members.",
+      "Single and group rates are per person unless noted.",
+      "Contact us for more information about group outings and parties.",
       "Prices may change; confirm current rates at the clubhouse.",
     ],
   },
