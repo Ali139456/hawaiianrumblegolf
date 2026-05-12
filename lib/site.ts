@@ -21,54 +21,35 @@ export const site = {
     weekend: "Friday & Saturday | 10:00 AM – 11:30 PM",
   },
   rates: {
-    /** Two-column ticket board (cash pricing). */
     title: "Ticket rates",
     leftColumn: [
       {
-        label: "One game — Adult",
-        detail: "18 holes",
-        price: "13.95",
+        label: "1st game",
+        detail: "Per person",
+        price: "14.95",
         pricePrefix: "",
       },
       {
-        label: "One game — Child",
-        detail: "18 holes · Ages 10 & under",
-        price: "11.95",
+        label: "2nd game",
+        detail: "Replay the fun the same day",
+        price: "7.95",
         pricePrefix: "",
-      },
-      {
-        label: "Two games",
-        detail: "36 holes · Play both courses!",
-        price: "4.95",
-        pricePrefix: "+",
-        priceNote: "Add-on with first round",
+        badge: "Popular",
+        highlight: true,
       },
     ],
     rightColumn: [
       {
-        label: "One game + CiCi's Pizza",
-        detail: "Play one course and enjoy CiCi's Pizza Buffet*",
-        price: "24.95",
+        label: "Group rate",
+        detail: "Per person, minimum 20 people",
+        price: "11.95",
         pricePrefix: "",
-      },
-      {
-        label: "Two games + CiCi's Pizza",
-        detail: "Play both courses and enjoy CiCi's Pizza Buffet*",
-        price: "29.95",
-        pricePrefix: "",
-      },
-      {
-        label: "Unlimited",
-        detail: "Bottomless same-day mini golf!",
-        price: "24.95",
-        pricePrefix: "",
-        highlight: true,
+        cta: { href: "#contact", label: "Plan a group outing" },
       },
     ],
     footnotes: [
-      "Drinks are not included with CiCi's Buffet.",
-      "Prices above reflect regular cash price.",
-      "All rates are per person.",
+      "Walk-ins welcome. Ask about specials for military, seniors, Florida residents, and Disney & Universal cast members.",
+      "Prices may change; confirm current rates at the clubhouse.",
     ],
   },
   highlights: [

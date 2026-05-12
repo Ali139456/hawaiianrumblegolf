@@ -10,11 +10,13 @@ type TicketLine = {
   pricePrefix: string;
   priceNote?: string;
   highlight?: boolean;
+  badge?: string;
+  cta?: { readonly href: string; readonly label: string };
 };
 
 function TicketRow({ item }: { item: TicketLine }) {
   const base =
-    "rounded-xl border px-5 py-5 text-left shadow-sm transition-colors sm:px-6 sm:py-5";
+    "relative rounded-xl border px-5 py-5 text-left shadow-sm transition-colors sm:px-6 sm:py-5";
 
   const normal = "border-white/10 bg-slate-900/60";
 
@@ -23,6 +25,11 @@ function TicketRow({ item }: { item: TicketLine }) {
 
   return (
     <div className={`${base} ${item.highlight ? featured : normal}`}>
+      {item.badge ? (
+        <span className="absolute right-3 top-3 rounded-full bg-orange-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white sm:right-4 sm:top-4 sm:text-xs">
+          {item.badge}
+        </span>
+      ) : null}
       <h3 className="text-lg font-semibold tracking-tight text-white sm:text-xl">{item.label}</h3>
       <p className="mt-2 text-sm leading-relaxed text-slate-400">{item.detail}</p>
       <p className="mt-4 flex flex-wrap items-baseline gap-2">
@@ -39,6 +46,14 @@ function TicketRow({ item }: { item: TicketLine }) {
           </span>
         ) : null}
       </p>
+      {item.cta ? (
+        <Link
+          href={item.cta.href}
+          className="mt-5 inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15 sm:w-auto"
+        >
+          {item.cta.label}
+        </Link>
+      ) : null}
     </div>
   );
 }
