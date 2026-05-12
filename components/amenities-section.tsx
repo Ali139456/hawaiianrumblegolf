@@ -1,11 +1,12 @@
 import Image from "next/image";
+import { Reveal } from "@/components/motion/reveal";
 import { media } from "@/lib/site";
 
 export function AmenitiesSection() {
   return (
     <section className="bg-surface px-4 py-20 sm:px-6">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
-        <div className="overflow-hidden rounded-3xl border border-slate-200 shadow-lg">
+        <Reveal className="overflow-hidden rounded-3xl border border-slate-200 shadow-lg" y={20}>
           <Image
             src={media.refreshments}
             alt="Clubhouse refreshments at Hawaiian Rumble"
@@ -14,8 +15,8 @@ export function AmenitiesSection() {
             className="h-full w-full object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-        </div>
-        <div>
+        </Reveal>
+        <Reveal className="lg:pl-2" delay={0.12} y={20}>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Drinks, snacks &amp; sweets
           </h2>
@@ -33,7 +34,7 @@ export function AmenitiesSection() {
               Candy shop packed with treats for kids (and kids at heart)
             </li>
           </ul>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

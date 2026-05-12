@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Reveal } from "@/components/motion/reveal";
 import { media, site } from "@/lib/site";
 
 export function GiftShopSection() {
   return (
     <section id="gift-shop" className="scroll-mt-24 bg-slate-950 px-4 py-20 text-white sm:px-6">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
-        <div className="order-2 lg:order-1">
+        <Reveal className="order-2 lg:order-1" y={24}>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300/95">
             While you&apos;re here
           </p>
@@ -26,8 +27,8 @@ export function GiftShopSection() {
           >
             Explore the movie shop
           </Link>
-        </div>
-        <div className="order-1 overflow-hidden rounded-3xl border border-white/10 shadow-2xl lg:order-2">
+        </Reveal>
+        <Reveal className="order-1 overflow-hidden rounded-3xl border border-white/10 shadow-2xl lg:order-2" delay={0.1} y={20}>
           <Image
             src={media.giftShop}
             alt="Gift shop and collectibles at Hawaiian Rumble"
@@ -36,7 +37,7 @@ export function GiftShopSection() {
             className="h-full w-full object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -21,13 +21,55 @@ export const site = {
     weekend: "Friday & Saturday | 10:00 AM – 11:30 PM",
   },
   rates: {
-    firstGame: { label: "1st game", price: "14.95", note: "Per person" },
-    secondGame: { label: "2nd game", price: "7.95", note: "Same day" },
-    group: {
-      label: "Group rate",
-      price: "11.95",
-      note: "Per person, minimum 20 people",
-    },
+    /** Two-column ticket board (cash pricing). */
+    title: "Ticket rates",
+    leftColumn: [
+      {
+        label: "One game — Adult",
+        detail: "18 holes",
+        price: "13.95",
+        pricePrefix: "",
+      },
+      {
+        label: "One game — Child",
+        detail: "18 holes · Ages 10 & under",
+        price: "11.95",
+        pricePrefix: "",
+      },
+      {
+        label: "Two games",
+        detail: "36 holes · Play both courses!",
+        price: "4.95",
+        pricePrefix: "+",
+        priceNote: "Add-on with first round",
+      },
+    ],
+    rightColumn: [
+      {
+        label: "One game + CiCi's Pizza",
+        detail: "Play one course and enjoy CiCi's Pizza Buffet*",
+        price: "24.95",
+        pricePrefix: "",
+      },
+      {
+        label: "Two games + CiCi's Pizza",
+        detail: "Play both courses and enjoy CiCi's Pizza Buffet*",
+        price: "29.95",
+        pricePrefix: "",
+      },
+      {
+        label: "Unlimited",
+        detail: "Bottomless same-day mini golf!",
+        price: "24.95",
+        pricePrefix: "",
+        highlight: true,
+      },
+    ],
+    footnotes: [
+      "Drinks are not included with CiCi's Buffet.",
+      "Prices above reflect regular cash price.",
+      "All rates are per person.",
+    ],
   },
   highlights: [
     "18 holes · wheelchair accessible",
