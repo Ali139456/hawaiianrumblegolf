@@ -2,21 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const nav = [
-  { href: "#rates", label: "Rates" },
-  { href: "#experience", label: "Experience" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#gift-shop", label: "Gift shop" },
-  { href: "#contact", label: "Contact" },
-] as const;
+type NavItem = { href: string; label: string };
+
+const nav: NavItem[] = [
+  { href: "/#rates", label: "Rates" },
+  { href: "/deals", label: "Deals" },
+  { href: "/#gallery", label: "Gallery" },
+  { href: "/#testimonials", label: "Reviews" },
+  { href: "/#texas-movie-shop", label: "Texas Movie Shop" },
+  { href: "/#contact", label: "Contact" },
+];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
-    <header className="site-header-enter sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 shadow-[0_4px_30px_rgba(0,0,0,0.45)] backdrop-blur-2xl backdrop-saturate-150">
+    <header className="site-header-enter relative z-10 border-b border-white/10 bg-slate-950/70 shadow-[0_4px_30px_rgba(0,0,0,0.45)] backdrop-blur-2xl backdrop-saturate-150">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/35 to-transparent"
         aria-hidden
@@ -26,7 +31,7 @@ export function SiteHeader() {
         aria-hidden
       />
 
-      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-4">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-4">
         <div className="shrink-0 justify-self-start">
           <div className="transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]">
             <Link
@@ -37,9 +42,9 @@ export function SiteHeader() {
               <Image
                 src="/logo.png"
                 alt="Hawaiian Rumble Adventure Golf"
-                width={220}
-                height={56}
-                className="h-10 w-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] sm:h-12"
+                width={280}
+                height={72}
+                className="h-12 w-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] sm:h-14 md:h-16"
                 priority
               />
             </Link>
@@ -48,23 +53,32 @@ export function SiteHeader() {
 
         <nav className="hidden items-center justify-self-center md:flex" aria-label="Primary">
           <div className="flex items-center rounded-full border border-white/10 bg-slate-900/55 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ring-1 ring-black/40">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group relative rounded-full px-3.5 py-2 text-sm font-medium text-slate-200 transition-colors hover:text-white sm:px-4"
-              >
-                <span className="relative z-10">{item.label}</span>
-                <span
-                  className="absolute inset-0 rounded-full bg-white/0 transition-colors duration-200 group-hover:bg-white/[0.08]"
-                  aria-hidden
-                />
-                <span
-                  className="pointer-events-none absolute bottom-1 left-1/2 h-0.5 w-8 origin-center -translate-x-1/2 scale-x-0 rounded-full bg-gradient-to-r from-amber-300 to-orange-400 transition-transform duration-300 ease-out group-hover:scale-x-100"
-                  aria-hidden
-                />
-              </Link>
-            ))}
+            {nav.map((item) => {
+              const active = item.href === "/deals" && pathname === "/deals";
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`group relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors sm:px-4 ${
+                    active
+                      ? "text-white ring-1 ring-white/40 ring-inset bg-white/[0.12]"
+                      : "text-slate-200 hover:text-white"
+                  }`}
+                >
+                  <span className="relative z-10">{item.label}</span>
+                  <span
+                    className="absolute inset-0 rounded-full bg-white/0 transition-colors duration-200 group-hover:bg-white/[0.08]"
+                    aria-hidden
+                  />
+                  {!active ? (
+                    <span
+                      className="pointer-events-none absolute bottom-1 left-1/2 h-0.5 w-8 origin-center -translate-x-1/2 scale-x-0 rounded-full bg-gradient-to-r from-amber-300 to-orange-400 transition-transform duration-300 ease-out group-hover:scale-x-100"
+                      aria-hidden
+                    />
+                  ) : null}
+                </Link>
+              );
+            })}
           </div>
         </nav>
 
@@ -73,18 +87,19 @@ export function SiteHeader() {
             <Link
               href={siteHref("rates")}
               className="group/cta relative inline-flex overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(249,115,22,0.35)] ring-1 ring-white/25 transition-[filter] hover:brightness-110"
+              aria-label="Come join us: see rates and plan your visit"
             >
               <span
                 className="cta-shine-sweep pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-500 ease-out group-hover/cta:translate-x-full"
                 aria-hidden
               />
-              <span className="relative z-10">Book a visit</span>
+              <span className="relative z-10">Come join us</span>
             </Link>
           </div>
 
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.07] p-2.5 text-white shadow-inner shadow-white/5 ring-1 ring-white/10 transition hover:border-amber-400/30 hover:bg-white/10 md:hidden"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/[0.12] to-white/[0.04] p-2.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-white/10 transition active:scale-95 hover:border-amber-400/40 hover:from-white/[0.16] md:hidden"
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
@@ -104,28 +119,47 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <div className="border-t border-white/10 bg-gradient-to-b from-slate-950/98 to-slate-950 px-4 py-4 md:hidden">
-          <div className="flex flex-col gap-1.5">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.04] px-4 py-3 text-base font-medium text-slate-100 transition hover:border-amber-400/20 hover:bg-white/[0.08]"
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
-                <span className="text-amber-400/80" aria-hidden>
-                  →
-                </span>
-              </Link>
-            ))}
+        <div className="border-t border-white/10 bg-slate-950/95 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:hidden">
+          <div className="mx-3 rounded-3xl border border-white/12 bg-gradient-to-b from-white/[0.09] via-white/[0.04] to-transparent p-4 shadow-[0_24px_60px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
+            <p className="text-center text-[10px] font-bold uppercase tracking-[0.32em] text-amber-300/90">
+              Explore
+            </p>
+            <p className="mt-1 text-center text-xs text-slate-400">Mini golf near Disney · Orlando</p>
+            <div className="mt-4 flex flex-col gap-2">
+              {nav.map((item) => {
+                const active = item.href === "/deals" && pathname === "/deals";
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex min-h-[3.25rem] items-center justify-between rounded-2xl border px-4 py-3 text-[15px] font-semibold tracking-tight transition active:scale-[0.99] ${
+                      active
+                        ? "border-amber-400/50 bg-gradient-to-r from-amber-400/20 to-orange-500/15 text-white shadow-inner shadow-amber-900/20"
+                        : "border-white/8 bg-white/[0.05] text-slate-100 hover:border-amber-400/25 hover:bg-white/[0.1]"
+                    }`}
+                    onClick={() => setOpen(false)}
+                  >
+                    <span>{item.label}</span>
+                    <span
+                      className={`flex h-8 w-8 items-center justify-center rounded-full text-sm ${
+                        active ? "bg-amber-400/25 text-amber-200" : "bg-white/10 text-amber-300/90"
+                      }`}
+                      aria-hidden
+                    >
+                      →
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
             <Link
               href={siteHref("rates")}
-              className="mt-1 block rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3.5 text-center text-base font-semibold text-slate-950 shadow-lg shadow-orange-500/25 ring-1 ring-white/20"
+              className="mt-4 flex min-h-[3.25rem] items-center justify-center rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-4 text-base font-bold text-slate-950 shadow-lg shadow-orange-500/35 ring-2 ring-white/25 transition active:scale-[0.98] hover:brightness-105"
               onClick={() => setOpen(false)}
             >
-              View rates
+              Come join us
             </Link>
+            <p className="mt-3 text-center text-[11px] text-slate-500">Tap a link above or see rates &amp; deals</p>
           </div>
         </div>
       ) : null}

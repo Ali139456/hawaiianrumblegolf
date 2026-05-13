@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       from: contactFrom,
       to: [contactTo],
       replyTo: emailStr,
-      subject: `Website message from ${nameStr} — ${site.shortName}`,
+      subject: `Website message from ${nameStr} | ${site.shortName}`,
       text: [
         `Name: ${nameStr}`,
         `Email: ${emailStr}`,

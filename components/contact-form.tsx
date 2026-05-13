@@ -42,7 +42,7 @@ export function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+      className="grid gap-4 rounded-2xl border border-slate-200/90 bg-white/90 p-6 shadow-sm backdrop-blur-sm sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-1.5 text-sm">
@@ -87,7 +87,7 @@ export function ContactForm() {
 
       {status === "ok" ? (
         <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
-          Thanks—we received your message and will get back to you soon.
+          Thanks, we received your message and will get back to you soon.
         </p>
       ) : null}
       {status === "err" && error ? (

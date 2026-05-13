@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --surface: #f6f8fb;
-  --surface-elevated: #ffffff;
+  /* Tropical / Hawaiian palette */
+  --surface: #ecf6f3;
+  --surface-elevated: #f8fcfb;
   --ink: #0f172a;
   --muted: #475569;
   --brand: #f97316;
@@ -24,13 +25,50 @@
   --color-ocean-deep: var(--ocean-deep);
 }
 
+html {
+  min-height: 100%;
+  /* Hawaiian-inspired: warm sky → lagoon mist → sand shore */
+  background-color: #dff0ec;
+  background-image:
+    radial-gradient(ellipse 110% 50% at 50% -15%, rgba(251, 191, 36, 0.22) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 45% at 0% 30%, rgba(56, 189, 248, 0.14) 0%, transparent 48%),
+    radial-gradient(ellipse 75% 40% at 100% 25%, rgba(52, 211, 153, 0.16) 0%, transparent 48%),
+    radial-gradient(ellipse 100% 55% at 50% 100%, rgba(13, 148, 136, 0.12) 0%, transparent 55%),
+    linear-gradient(
+      168deg,
+      #e8f4f1 0%,
+      var(--surface) 32%,
+      #e2f0ec 58%,
+      #d8ebe6 100%
+    );
+  background-attachment: fixed;
+}
+
 body {
-  background:
-    radial-gradient(ellipse 100% 60% at 50% 0%, color-mix(in oklab, var(--ocean) 10%, transparent), transparent 55%),
-    radial-gradient(ellipse 80% 50% at 100% 30%, color-mix(in oklab, var(--brand) 6%, transparent), transparent 50%),
-    var(--surface);
+  min-height: 100%;
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Softer tap feedback on phones (keeps the site feeling polished, not “web 1.0”). */
+@media (max-width: 767px) {
+  a,
+  button {
+    -webkit-tap-highlight-color: color-mix(in oklab, var(--brand) 20%, transparent);
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    background-attachment: scroll;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    background-attachment: scroll;
+  }
 }
 
 ::selection {
@@ -103,6 +141,9 @@ body {
   }
   .hero-line-delay-4 {
     animation-delay: 0.42s;
+  }
+  .hero-line-delay-5 {
+    animation-delay: 0.52s;
   }
 
   .hero-stat {
@@ -192,5 +233,30 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* --- Marketing ticker (infinite horizontal scroll) --- */
+@keyframes marketing-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marketing-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  /* Slow crawl so each line is easy to read (full loop still repeats seamlessly). */
+  animation: marketing-marquee 150s linear infinite;
+  animation-fill-mode: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketing-marquee-track {
+    animation: marketing-marquee 200s linear infinite;
   }
 }

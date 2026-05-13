@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AmenitiesSection } from "@/components/amenities-section";
 import { ContactSection } from "@/components/contact-section";
 import { ExperienceSection } from "@/components/experience-section";
@@ -7,12 +8,13 @@ import { HeroSection } from "@/components/hero-section";
 import { InfoStrip } from "@/components/info-strip";
 import { RatesSection } from "@/components/rates-section";
 import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { StickySiteChrome } from "@/components/sticky-site-chrome";
+import { TestimonialsSection, TestimonialsSectionFallback } from "@/components/testimonials-section";
 
 export default function Home() {
   return (
     <div className="flex min-h-full flex-col">
-      <SiteHeader />
+      <StickySiteChrome />
       <main className="flex-1">
         <HeroSection />
         <InfoStrip />
@@ -21,6 +23,9 @@ export default function Home() {
         <AmenitiesSection />
         <GallerySection />
         <GiftShopSection />
+        <Suspense fallback={<TestimonialsSectionFallback />}>
+          <TestimonialsSection />
+        </Suspense>
         <ContactSection />
       </main>
       <SiteFooter />

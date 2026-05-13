@@ -1,0 +1,161 @@
+import { siGoogle } from "simple-icons";
+import Link from "next/link";
+import { SimpleBrandIcon } from "@/components/icons/simple-brand-icon";
+import { Reveal } from "@/components/motion/reveal";
+import { TropicalFramedSection } from "@/components/tropical-framed-section";
+import { TestimonialsReviewsBlock } from "@/components/testimonials-reviews-block";
+import { getGoogleReviewData, googleWriteReviewUrl, type GoogleReviewCard } from "@/lib/google-reviews";
+import { site } from "@/lib/site";
+
+export function TestimonialsSectionFallback() {
+  return (
+    <TropicalFramedSection id="testimonials" className="border-y border-emerald-900/10">
+      <>
+        <div className="mx-auto max-w-xl space-y-3 text-center lg:mx-0 lg:max-w-none lg:text-left">
+          <div className="mx-auto h-3 w-24 animate-pulse rounded-full bg-gradient-to-r from-emerald-200/60 to-teal-200/50 lg:mx-0" />
+          <div className="mx-auto h-10 max-w-sm animate-pulse rounded-xl bg-emerald-900/10 lg:mx-0" />
+          <div className="mx-auto h-5 max-w-md animate-pulse rounded-lg bg-emerald-900/10 lg:mx-0" />
+        </div>
+        <div className="mt-10 md:mt-14 md:hidden">
+          <div className="h-48 animate-pulse rounded-[1.05rem] bg-gradient-to-br from-white/80 via-emerald-50/40 to-teal-50/30 shadow-inner ring-1 ring-emerald-900/5" />
+          <div className="mt-4 flex justify-between px-1">
+            <div className="h-11 w-11 animate-pulse rounded-full bg-white/80 shadow ring-1 ring-emerald-900/5" />
+            <div className="h-11 w-11 animate-pulse rounded-full bg-white/80 shadow ring-1 ring-emerald-900/5" />
+          </div>
+        </div>
+        <div className="mt-10 hidden gap-7 md:mt-14 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className="h-52 animate-pulse rounded-[1.35rem] bg-gradient-to-br from-white/80 via-emerald-50/40 to-teal-50/30 shadow-inner ring-1 ring-emerald-900/5"
+            />
+          ))}
+        </div>
+      </>
+    </TropicalFramedSection>
+  );
+}
+
+export async function TestimonialsSection() {
+  const data = await getGoogleReviewData();
+
+  const googleCards =
+    data.status === "live" ? data.reviews.filter((r) => r.text.length > 0).slice(0, 5) : [];
+
+  const useGoogle = googleCards.length > 0;
+
+  const featured = site.featuredTestimonials.map((t, i) => ({
+    id: `f-${i}`,
+    authorName: t.name,
+    rating: t.rating,
+    text: t.quote,
+    relativeTime: "",
+    profilePhotoUrl: null as string | null,
+  }));
+
+  const cards: GoogleReviewCard[] = useGoogle ? googleCards : featured;
+
+  const reviewHref =
+    data.status === "live" ? googleWriteReviewUrl(data.placeId) : site.googleMapsReviewsUrl;
+
+  const summary =
+    data.status === "live" && (data.rating != null || data.userRatingsTotal != null) ? (
+      <div className="mt-4 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-800/10 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+        {data.rating != null ? (
+          <span className="text-sm text-slate-700">
+            <span className="text-lg font-bold tabular-nums text-emerald-800">{data.rating.toFixed(1)}</span>
+            <span className="ml-1 font-medium text-slate-600">on Google</span>
+          </span>
+        ) : null}
+        {data.rating != null && data.userRatingsTotal != null ? (
+          <span className="hidden sm:inline text-slate-300" aria-hidden>
+            |
+          </span>
+        ) : null}
+        {data.userRatingsTotal != null ? (
+          <span className="text-sm font-medium text-slate-600">
+            {data.userRatingsTotal.toLocaleString()} reviews
+          </span>
+        ) : null}
+      </div>
+    ) : null;
+
+  return (
+    <TropicalFramedSection id="testimonials" className="border-y border-emerald-900/10">
+      <>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+          <Reveal className="max-w-2xl">
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-teal-800/75 sm:text-xs">
+              Voices from the course
+            </p>
+            <div className="mt-3 flex flex-wrap items-end gap-3">
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-[2.15rem] sm:leading-tight">
+                Guest reviews
+              </h2>
+              {useGoogle ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-gradient-to-r from-white to-emerald-50/90 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm ring-1 ring-emerald-900/5">
+                  <span style={{ color: `#${siGoogle.hex}` }} className="inline-flex">
+                    <SimpleBrandIcon icon={siGoogle} className="h-3.5 w-3.5" />
+                  </span>
+                  Live from Google
+                </span>
+              ) : null}
+            </div>
+            <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-teal-500 shadow-sm" />
+            <p className="mt-5 text-lg leading-relaxed text-muted">
+              {useGoogle
+                ? "Fresh feedback from Google. Thank you for spending your evening with us under the lights."
+                : "Kind words from families, locals, and vacationers. Enable the Google Places API anytime to sync live reviews and photos."}
+            </p>
+            {summary}
+          </Reveal>
+
+          <Reveal
+            className="flex w-full flex-col gap-3 rounded-3xl border border-white/70 bg-gradient-to-br from-white/90 via-white/70 to-emerald-50/50 p-5 shadow-[0_12px_40px_-12px_rgba(13,148,136,0.18)] backdrop-blur-md sm:flex-row sm:p-4 lg:w-auto lg:min-w-[260px] lg:flex-col lg:p-5"
+            y={10}
+          >
+            <Link
+              href="/#contact"
+              className="inline-flex items-center justify-center rounded-full border border-slate-200/90 bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-amber-400/60 hover:shadow-md"
+            >
+              Give us feedback
+            </Link>
+            <a
+              href={reviewHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/25 ring-1 ring-white/15 transition hover:brightness-110"
+            >
+              <span style={{ color: `#${siGoogle.hex}` }} className="inline-flex">
+                <SimpleBrandIcon icon={siGoogle} className="h-4 w-4" />
+              </span>
+              Review on Google
+            </a>
+            <a
+              href={site.googleMapsReviewsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center text-sm font-semibold text-teal-800 underline decoration-teal-800/25 underline-offset-[5px] transition hover:decoration-teal-700 sm:text-left"
+            >
+              Read all reviews on Google →
+            </a>
+          </Reveal>
+        </div>
+
+        {useGoogle ? (
+          <p className="mt-8 rounded-2xl border border-emerald-900/[0.06] bg-white/50 px-4 py-3 text-xs leading-relaxed text-muted backdrop-blur-sm">
+            Google shares up to five reviews per API request. Tap{" "}
+            <span className="font-semibold text-slate-700">&quot;Read all reviews on Google&quot;</span> for the full list.
+          </p>
+        ) : data.status === "error" ? (
+          <p className="mt-8 rounded-2xl border border-amber-200/90 bg-gradient-to-r from-amber-50/95 to-orange-50/80 px-4 py-3 text-sm text-amber-950 shadow-sm backdrop-blur-sm">
+            Live Google reviews could not be loaded (check your API key, billing, and Places API access).
+            Showing featured quotes instead.
+          </p>
+        ) : null}
+
+        <TestimonialsReviewsBlock cards={cards} useGoogle={useGoogle} />
+      </>
+    </TropicalFramedSection>
+  );
+}

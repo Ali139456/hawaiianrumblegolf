@@ -12,7 +12,7 @@ export function GallerySection() {
             On the course
           </h2>
           <p className="mt-3 text-lg text-muted">
-            A photo-friendly tropical escape—lush landscaping, island details, and Orlando sunshine.
+            A photo-friendly tropical escape: lush landscaping, island details, and Orlando sunshine.
           </p>
         </Reveal>
 

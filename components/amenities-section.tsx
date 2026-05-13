@@ -21,7 +21,7 @@ export function AmenitiesSection() {
             Drinks, snacks &amp; sweets
           </h2>
           <p className="mt-3 text-lg text-muted">
-            After your round, cool off with bottled water and soft drinks from the clubhouse—and
+            After your round, cool off with bottled water and soft drinks from the clubhouse, and
             explore a giant candy selection for the ride home.
           </p>
           <ul className="mt-8 space-y-3 text-slate-800">
