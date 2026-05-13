@@ -30,7 +30,7 @@ const EMPTY_DEAL_CARD: DealCardForm = {
 const MAX_DEAL_CARDS = 24;
 
 function cloneSite(s: SiteConfig): SiteConfig {
-  return JSON.parse(JSON.stringify(s)) as SiteConfig;
+  return structuredClone(s);
 }
 
 function dealCardsFromBase(base: SiteConfig): DealCardForm[] {
@@ -209,11 +209,11 @@ export function AdminSettingsForm({ initialSite }: Props) {
 
   const label = "mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-200/75";
   const input =
-    "w-full rounded-xl border border-white/12 bg-slate-950/60 px-3.5 py-2.5 text-sm leading-snug text-slate-100 placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition focus:border-amber-400/40 focus:ring-2 focus:ring-amber-400/15";
+    "touch-manipulation min-h-[44px] w-full max-w-full rounded-xl border border-white/12 bg-slate-950/60 px-3.5 py-2.5 text-base leading-snug text-slate-100 placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition focus:border-amber-400/40 focus:ring-2 focus:ring-amber-400/15 sm:min-h-0 sm:text-sm";
   const ta = (min: string) => `${input} resize-y leading-relaxed ${min}`;
   const section =
-    "rounded-2xl border border-white/[0.08] bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-6";
-  const sectionTitle = "text-lg font-bold tracking-tight text-white";
+    "rounded-2xl border border-white/[0.08] bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 sm:backdrop-blur-md";
+  const sectionTitle = "text-base font-bold tracking-tight text-white sm:text-lg";
   const sectionHint = "mt-1 text-sm leading-relaxed text-slate-400";
   const dealShellStyles = [
     "border-emerald-500/25 bg-emerald-950/25",
@@ -223,33 +223,32 @@ export function AdminSettingsForm({ initialSite }: Props) {
   ] as const;
   const dealShell = (i: number) =>
     `rounded-xl border p-4 sm:p-5 ${dealShellStyles[i % dealShellStyles.length]}`;
+  const actionBtn =
+    "touch-manipulation inline-flex min-h-[44px] w-full flex-1 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-100 transition active:bg-white/15 sm:min-h-0 sm:w-auto sm:flex-none sm:active:bg-white/10";
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-sm leading-relaxed text-slate-400">
-            Changes merge with defaults in <code className="rounded-md bg-white/5 px-1.5 py-0.5 text-xs text-amber-200/90">lib/site.ts</code>{" "}
+    <div className="space-y-5 sm:space-y-8">
+      <div className="flex flex-col gap-4">
+        <div className="min-w-0">
+          <p className="break-words text-sm leading-relaxed text-slate-400">
+            Changes merge with defaults in{" "}
+            <code className="inline-block max-w-full break-all rounded-md bg-white/5 px-1.5 py-0.5 text-xs text-amber-200/90">
+              lib/site.ts
+            </code>{" "}
             and are stored in Supabase.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/deals"
-            className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-100 transition hover:border-amber-400/35 hover:bg-white/10"
-          >
+        <div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:gap-2">
+          <Link href="/deals" className={`${actionBtn} hover:border-amber-400/35 hover:bg-white/10`}>
             Preview deals
           </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-100 transition hover:border-teal-400/35 hover:bg-white/10"
-          >
+          <Link href="/" className={`${actionBtn} hover:border-teal-400/35 hover:bg-white/10`}>
             View site
           </Link>
           <button
             type="button"
             onClick={() => void logout()}
-            className="inline-flex items-center justify-center rounded-xl border border-rose-500/30 bg-rose-950/40 px-4 py-2.5 text-sm font-semibold text-rose-100 transition hover:bg-rose-950/60"
+            className="touch-manipulation inline-flex min-h-[44px] w-full items-center justify-center rounded-xl border border-rose-500/30 bg-rose-950/40 px-4 py-2.5 text-sm font-semibold text-rose-100 transition hover:bg-rose-950/60 active:bg-rose-950/80 sm:min-h-0 sm:w-auto"
           >
             Sign out
           </button>
@@ -258,7 +257,7 @@ export function AdminSettingsForm({ initialSite }: Props) {
 
       {notice ? (
         <div
-          className={`rounded-xl border px-4 py-3.5 text-sm font-medium ${
+          className={`break-words rounded-xl border px-4 py-3.5 text-sm font-medium ${
             notice.ok
               ? "border-emerald-400/30 bg-emerald-950/50 text-emerald-100"
               : "border-rose-400/35 bg-rose-950/45 text-rose-100"
@@ -269,9 +268,9 @@ export function AdminSettingsForm({ initialSite }: Props) {
       ) : null}
 
       <section className={section}>
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-1 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" aria-hidden />
-          <div>
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" aria-hidden />
+          <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>General</h2>
             <p className={sectionHint}>Business name, tagline, and contact basics.</p>
           </div>
@@ -313,9 +312,9 @@ export function AdminSettingsForm({ initialSite }: Props) {
       </section>
 
       <section className={section}>
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-1 rounded-full bg-gradient-to-b from-teal-400 to-emerald-500" aria-hidden />
-          <div>
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-teal-400 to-emerald-500" aria-hidden />
+          <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Hours &amp; ticker</h2>
             <p className={sectionHint}>Hours show in the info strip; ticker lines scroll in the header.</p>
           </div>
@@ -338,9 +337,9 @@ export function AdminSettingsForm({ initialSite }: Props) {
       </section>
 
       <section className={section}>
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-1 rounded-full bg-gradient-to-b from-sky-400 to-indigo-500" aria-hidden />
-          <div>
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-sky-400 to-indigo-500" aria-hidden />
+          <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Links</h2>
             <p className={sectionHint}>Maps, reviews, and social profiles.</p>
           </div>
@@ -374,9 +373,9 @@ export function AdminSettingsForm({ initialSite }: Props) {
       </section>
 
       <section className={section}>
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-1 rounded-full bg-gradient-to-b from-amber-400 to-rose-500" aria-hidden />
-          <div>
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-amber-400 to-rose-500" aria-hidden />
+          <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Rates</h2>
             <p className={sectionHint}>Homepage rates section — single, replay, and group rows.</p>
           </div>
@@ -458,9 +457,9 @@ export function AdminSettingsForm({ initialSite }: Props) {
       </section>
 
       <section className={section}>
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-1 rounded-full bg-gradient-to-b from-orange-400 to-pink-500" aria-hidden />
-          <div>
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-orange-400 to-pink-500" aria-hidden />
+          <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Deals page</h2>
             <p className={sectionHint}>
               Plain text for <span className="text-slate-200">/deals</span> — title, intro, footnote, and as many offer cards as you need (discounts, group deals, window rates, etc.).
@@ -491,7 +490,7 @@ export function AdminSettingsForm({ initialSite }: Props) {
                   <button
                     type="button"
                     onClick={() => removeDealCard(i)}
-                    className="rounded-lg border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-rose-400/35 hover:bg-rose-950/40 hover:text-rose-100"
+                    className="min-h-[40px] shrink-0 rounded-lg border border-white/12 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-rose-400/35 hover:bg-rose-950/40 hover:text-rose-100 active:bg-rose-950/60 sm:min-h-0 sm:py-1.5"
                   >
                     Remove
                   </button>
@@ -534,12 +533,12 @@ export function AdminSettingsForm({ initialSite }: Props) {
               </div>
             </div>
           ))}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
+          <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
             <button
               type="button"
               onClick={() => addDealCard()}
               disabled={dealCards.length >= MAX_DEAL_CARDS}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-dashed border-amber-400/35 bg-amber-500/5 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-400/55 hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-dashed border-amber-400/35 bg-amber-500/5 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-400/55 hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:w-auto"
             >
               <span className="text-lg font-bold leading-none text-amber-300" aria-hidden>
                 +
@@ -553,15 +552,17 @@ export function AdminSettingsForm({ initialSite }: Props) {
         </div>
       </section>
 
-      <div className="sticky bottom-4 z-10 flex justify-end sm:bottom-6">
-        <button
-          type="button"
-          disabled={pending}
-          onClick={() => save()}
-          className="rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 px-10 py-3.5 text-sm font-bold text-slate-950 shadow-[0_12px_40px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition enabled:hover:brightness-110 enabled:active:scale-[0.98] disabled:opacity-45"
-        >
-          {pending ? "Saving…" : "Save all changes"}
-        </button>
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/15 bg-slate-950/92 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-lg supports-[backdrop-filter]:bg-slate-950/88 sm:relative sm:inset-x-auto sm:bottom-auto sm:z-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 sm:pb-0 sm:backdrop-blur-none">
+        <div className="mx-auto flex max-w-4xl justify-stretch sm:justify-end">
+          <button
+            type="button"
+            disabled={pending}
+            onClick={() => save()}
+            className="touch-manipulation min-h-[48px] w-full rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 px-6 py-3.5 text-base font-bold text-slate-950 shadow-[0_12px_40px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition enabled:hover:brightness-110 enabled:active:scale-[0.98] disabled:opacity-45 sm:w-auto sm:min-h-0 sm:px-10 sm:text-sm"
+          >
+            {pending ? "Saving…" : "Save all changes"}
+          </button>
+        </div>
       </div>
     </div>
   );

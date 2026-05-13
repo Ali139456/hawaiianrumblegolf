@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/12 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition focus:border-amber-400/45 focus:ring-2 focus:ring-amber-400/15";
+  "touch-manipulation mt-2 min-h-[48px] w-full rounded-xl border border-white/12 bg-slate-950/70 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition focus:border-amber-400/45 focus:ring-2 focus:ring-amber-400/15 sm:min-h-0 sm:text-sm";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -70,7 +70,7 @@ export function AdminLoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 py-3.5 text-sm font-bold text-slate-950 shadow-[0_8px_32px_rgba(249,115,22,0.35)] ring-2 ring-white/15 transition enabled:hover:brightness-110 enabled:active:scale-[0.99] disabled:opacity-55"
+        className="touch-manipulation min-h-[48px] w-full rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 py-3.5 text-base font-bold text-slate-950 shadow-[0_8px_32px_rgba(249,115,22,0.35)] ring-2 ring-white/15 transition enabled:hover:brightness-110 enabled:active:scale-[0.99] disabled:opacity-55 sm:text-sm"
       >
         {loading ? "Signing in…" : "Sign in"}
       </button>
