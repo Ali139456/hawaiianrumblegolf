@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BuyTicketsButton } from "@/components/buy-tickets-button";
 import { Reveal } from "@/components/motion/reveal";
 import { MotionItem, StaggerRoot } from "@/components/motion/stagger";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
@@ -67,32 +68,37 @@ function TicketRow({ item }: { item: TicketLine }) {
       <p className="mt-2 text-sm leading-relaxed text-slate-400">{item.detail}</p>
 
       {item.compareAtPrice ? (
-        <div className="mt-5 space-y-2">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300/95">Same-day replay</p>
-          <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
-            <span className="flex items-baseline gap-1 text-slate-500">
-              <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Was</span>
-              <span className="text-2xl font-semibold line-through decoration-2 decoration-slate-500/90">
-                <span className="text-lg">$</span>
-                {formatUsd(item.compareAtPrice)}
+        <>
+          <div className="mt-5 space-y-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300/95">Same-day replay</p>
+            <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
+              <span className="flex items-baseline gap-1 text-slate-500">
+                <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Was</span>
+                <span className="text-2xl font-semibold line-through decoration-2 decoration-slate-500/90">
+                  <span className="text-lg">$</span>
+                  {formatUsd(item.compareAtPrice)}
+                </span>
               </span>
-            </span>
-            <span className="flex items-baseline gap-0.5">
-              <span className="text-sm font-bold uppercase tracking-wide text-emerald-300">Now</span>
-              <span className="text-4xl font-bold tracking-tight text-amber-200 sm:text-5xl">
-                <span className="text-2xl font-bold text-amber-200/95">$</span>
-                {item.price}
+              <span className="flex items-baseline gap-0.5">
+                <span className="text-sm font-bold uppercase tracking-wide text-emerald-300">Now</span>
+                <span className="text-4xl font-bold tracking-tight text-amber-200 sm:text-5xl">
+                  <span className="text-2xl font-bold text-amber-200/95">$</span>
+                  {item.price}
+                </span>
               </span>
-            </span>
+            </div>
+            {saleCopy ? (
+              <p className="text-sm font-semibold text-emerald-300/90">{saleCopy}</p>
+            ) : null}
+            <p className="text-xs leading-relaxed text-slate-500">
+              Play your first round at the regular rate, then lock in replay pricing for round two. Perfect
+              for families doubling up on fun.
+            </p>
           </div>
-          {saleCopy ? (
-            <p className="text-sm font-semibold text-emerald-300/90">{saleCopy}</p>
-          ) : null}
-          <p className="text-xs leading-relaxed text-slate-500">
-            Play your first round at the regular rate, then lock in replay pricing for round two. Perfect
-            for families doubling up on fun.
-          </p>
-        </div>
+          <div className="mt-auto w-full pt-5">
+            <BuyTicketsButton variant="ratesReplay" />
+          </div>
+        </>
       ) : (
         <p className="mt-5 flex flex-wrap items-baseline gap-2">
           <span className="text-3xl font-bold tracking-tight text-amber-300 sm:text-4xl">

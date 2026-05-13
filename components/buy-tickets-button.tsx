@@ -2,7 +2,7 @@
 
 import { useTicketsOptional } from "@/components/tickets-provider";
 
-type Variant = "hero" | "header" | "navMobile";
+type Variant = "hero" | "header" | "navMobile" | "ratesReplay";
 
 type Props = {
   variant: Variant;
@@ -42,6 +42,18 @@ export function BuyTicketsButton({ variant, onNavigate }: Props) {
         type="button"
         onClick={handleClick}
         className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-amber-300/90 bg-gradient-to-b from-amber-400/25 to-orange-500/15 px-5 text-sm font-bold text-white shadow-[0_6px_24px_rgba(0,0,0,0.25)] backdrop-blur-md transition hover:from-amber-400/35 hover:to-orange-500/25 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6"
+      >
+        Buy tickets
+      </button>
+    );
+  }
+
+  if (variant === "ratesReplay") {
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-bold text-slate-950 shadow-[0_6px_24px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition hover:brightness-105 active:scale-[0.98]"
       >
         Buy tickets
       </button>
