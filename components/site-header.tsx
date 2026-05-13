@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { BuyTicketsButton } from "@/components/buy-tickets-button";
 
 type NavItem = { href: string; label: string };
 
@@ -82,19 +83,22 @@ export function SiteHeader() {
           </div>
         </nav>
 
-        <div className="flex shrink-0 items-center justify-end justify-self-end gap-3">
-          <div className="hidden transition-transform duration-200 ease-out hover:-translate-y-px active:scale-[0.97] md:block">
-            <Link
-              href={siteHref("rates")}
-              className="group/cta relative inline-flex overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(249,115,22,0.35)] ring-1 ring-white/25 transition-[filter] hover:brightness-110"
-              aria-label="Come join us: see rates and plan your visit"
-            >
-              <span
-                className="cta-shine-sweep pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-500 ease-out group-hover/cta:translate-x-full"
-                aria-hidden
-              />
-              <span className="relative z-10">Come join us</span>
-            </Link>
+        <div className="flex shrink-0 items-center justify-end justify-self-end gap-2 sm:gap-3">
+          <div className="hidden items-center gap-2 md:flex">
+            <BuyTicketsButton variant="header" />
+            <div className="transition-transform duration-200 ease-out hover:-translate-y-px active:scale-[0.97]">
+              <Link
+                href={siteHref("rates")}
+                className="group/cta relative inline-flex overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(249,115,22,0.35)] ring-1 ring-white/25 transition-[filter] hover:brightness-110"
+                aria-label="Come join us: see rates and plan your visit"
+              >
+                <span
+                  className="cta-shine-sweep pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-500 ease-out group-hover/cta:translate-x-full"
+                  aria-hidden
+                />
+                <span className="relative z-10">Come join us</span>
+              </Link>
+            </div>
           </div>
 
           <button
@@ -152,9 +156,10 @@ export function SiteHeader() {
                 );
               })}
             </div>
+            <BuyTicketsButton variant="navMobile" onNavigate={() => setOpen(false)} />
             <Link
               href={siteHref("rates")}
-              className="mt-4 flex min-h-[3.25rem] items-center justify-center rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-4 text-base font-bold text-slate-950 shadow-lg shadow-orange-500/35 ring-2 ring-white/25 transition active:scale-[0.98] hover:brightness-105"
+              className="mt-2 flex min-h-[3.25rem] items-center justify-center rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-4 text-base font-bold text-slate-950 shadow-lg shadow-orange-500/35 ring-2 ring-white/25 transition active:scale-[0.98] hover:brightness-105"
               onClick={() => setOpen(false)}
             >
               Come join us

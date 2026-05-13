@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { TicketsProvider } from "@/components/tickets-provider";
 import { site } from "@/lib/site";
 
 const outfit = Outfit({
@@ -38,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} h-full scroll-smooth`} suppressHydrationWarning>
       <body className="min-h-full antialiased" suppressHydrationWarning>
-        {children}
+        <TicketsProvider>{children}</TicketsProvider>
       </body>
     </html>
   );

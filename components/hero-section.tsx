@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BuyTicketsButton } from "@/components/buy-tickets-button";
 import { media, type SiteConfig } from "@/lib/site";
 
 const stats = [
@@ -54,21 +55,24 @@ export function HeroSection({ site }: { site: SiteConfig }) {
             Two full 18-hole courses with lights, music, and tropical energy. Walk in, play one or double up
             and save on round two the same day.
           </p>
-          <div className="hero-line hero-line-delay-5 mx-auto mt-10 flex w-full max-w-md flex-col gap-3.5 sm:mx-0 sm:mt-8 sm:max-w-none sm:flex-row sm:items-center sm:gap-3">
-            <Link
-              href="/#rates"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 text-sm font-bold text-slate-950 shadow-[0_8px_28px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition hover:brightness-105 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:text-sm sm:font-semibold sm:ring-1"
-            >
-              See rates &amp; replay deal
-            </Link>
-            <Link
-              href={site.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-white/25 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:border sm:px-6 sm:text-sm"
-            >
-              Get directions
-            </Link>
+          <div className="hero-line hero-line-delay-5 mx-auto mt-10 flex w-full max-w-md flex-col gap-3.5 sm:mx-0 sm:mt-8 sm:max-w-none">
+            <div className="flex w-full flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              <Link
+                href="/#rates"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 text-sm font-bold text-slate-950 shadow-[0_8px_28px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition hover:brightness-105 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:text-sm sm:font-semibold sm:ring-1"
+              >
+                See rates &amp; replay deal
+              </Link>
+              <Link
+                href={site.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-white/25 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:border sm:px-6 sm:text-sm"
+              >
+                Get directions
+              </Link>
+              <BuyTicketsButton variant="hero" />
+            </div>
           </div>
         </div>
 
