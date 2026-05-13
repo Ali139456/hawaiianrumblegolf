@@ -17,7 +17,17 @@ type DealCardForm = {
   hint: string;
 };
 
-const DEAL_CARD_SLOTS = 3;
+const EMPTY_DEAL_CARD: DealCardForm = {
+  title: "",
+  badge: "",
+  body: "",
+  price: "",
+  compareAt: "",
+  hint: "",
+};
+
+/** Upper bound so the JSON payload stays reasonable; raise if needed. */
+const MAX_DEAL_CARDS = 24;
 
 function cloneSite(s: SiteConfig): SiteConfig {
   return JSON.parse(JSON.stringify(s)) as SiteConfig;
@@ -32,10 +42,10 @@ function dealCardsFromBase(base: SiteConfig): DealCardForm[] {
     compareAt: c.compareAt,
     hint: c.hint,
   }));
-  while (raw.length < DEAL_CARD_SLOTS) {
-    raw.push({ title: "", badge: "", body: "", price: "", compareAt: "", hint: "" });
+  if (raw.length === 0) {
+    raw.push({ ...EMPTY_DEAL_CARD });
   }
-  return raw.slice(0, DEAL_CARD_SLOTS);
+  return raw;
 }
 
 export function AdminSettingsForm({ initialSite }: Props) {
@@ -87,6 +97,17 @@ export function AdminSettingsForm({ initialSite }: Props) {
     setDealCards((prev) => prev.map((c, i) => (i === index ? { ...c, ...patch } : c)));
   }
 
+  function addDealCard() {
+    setDealCards((prev) => (prev.length >= MAX_DEAL_CARDS ? prev : [...prev, { ...EMPTY_DEAL_CARD }]));
+  }
+
+  function removeDealCard(index: number) {
+    setDealCards((prev) => {
+      if (prev.length <= 1) return prev;
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
   async function logout() {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -122,18 +143,23 @@ export function AdminSettingsForm({ initialSite }: Props) {
       .map((l) => l.trim())
       .filter(Boolean);
 
+    const cardsRaw = dealCards.map((c) => ({
+      title: c.title.trim(),
+      badge: c.badge.trim(),
+      body: c.body.trim(),
+      price: c.price.trim(),
+      compareAt: c.compareAt.trim(),
+      hint: c.hint.trim(),
+    }));
+    const cards = cardsRaw.filter(
+      (c) => c.title || c.badge || c.body || c.price || c.compareAt || c.hint,
+    );
+
     const dealsPage = {
       title: dealsTitle.trim(),
       subtitle: dealsSubtitle.trim(),
       footnote: dealsFootnote.trim(),
-      cards: dealCards.map((c) => ({
-        title: c.title.trim(),
-        badge: c.badge.trim(),
-        body: c.body.trim(),
-        price: c.price.trim(),
-        compareAt: c.compareAt.trim(),
-        hint: c.hint.trim(),
-      })),
+      cards,
     };
 
     return {
@@ -189,14 +215,14 @@ export function AdminSettingsForm({ initialSite }: Props) {
     "rounded-2xl border border-white/[0.08] bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-6";
   const sectionTitle = "text-lg font-bold tracking-tight text-white";
   const sectionHint = "mt-1 text-sm leading-relaxed text-slate-400";
+  const dealShellStyles = [
+    "border-emerald-500/25 bg-emerald-950/25",
+    "border-amber-500/25 bg-amber-950/20",
+    "border-sky-500/20 bg-sky-950/20",
+    "border-fuchsia-500/20 bg-fuchsia-950/20",
+  ] as const;
   const dealShell = (i: number) =>
-    `rounded-xl border p-4 sm:p-5 ${
-      i === 0
-        ? "border-emerald-500/25 bg-emerald-950/25"
-        : i === 1
-          ? "border-amber-500/25 bg-amber-950/20"
-          : "border-sky-500/20 bg-sky-950/20"
-    }`;
+    `rounded-xl border p-4 sm:p-5 ${dealShellStyles[i % dealShellStyles.length]}`;
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -437,7 +463,7 @@ export function AdminSettingsForm({ initialSite }: Props) {
           <div>
             <h2 className={sectionTitle}>Deals page</h2>
             <p className={sectionHint}>
-              Plain text for <span className="text-slate-200">/deals</span> — title, intro, footnote, and three offer cards.
+              Plain text for <span className="text-slate-200">/deals</span> — title, intro, footnote, and as many offer cards as you need (discounts, group deals, window rates, etc.).
             </p>
           </div>
         </div>
@@ -459,7 +485,18 @@ export function AdminSettingsForm({ initialSite }: Props) {
         <div className="mt-8 space-y-6">
           {dealCards.map((card, i) => (
             <div key={i} className={dealShell(i)}>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Offer {i + 1}</p>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Offer {i + 1}</p>
+                {dealCards.length > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => removeDealCard(i)}
+                    className="rounded-lg border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-rose-400/35 hover:bg-rose-950/40 hover:text-rose-100"
+                  >
+                    Remove
+                  </button>
+                ) : null}
+              </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 <label className="block">
                   <span className={label}>Card title</span>
@@ -497,6 +534,22 @@ export function AdminSettingsForm({ initialSite }: Props) {
               </div>
             </div>
           ))}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button
+              type="button"
+              onClick={() => addDealCard()}
+              disabled={dealCards.length >= MAX_DEAL_CARDS}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-dashed border-amber-400/35 bg-amber-500/5 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-400/55 hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <span className="text-lg font-bold leading-none text-amber-300" aria-hidden>
+                +
+              </span>
+              Add offer / special
+            </button>
+            {dealCards.length >= MAX_DEAL_CARDS ? (
+              <span className="text-xs text-slate-500">Maximum {MAX_DEAL_CARDS} offers.</span>
+            ) : null}
+          </div>
         </div>
       </section>
 

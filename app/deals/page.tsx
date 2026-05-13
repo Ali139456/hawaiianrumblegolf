@@ -32,7 +32,7 @@ export default async function DealsPage() {
 
           <div className="mx-auto mt-14 grid max-w-5xl gap-7 lg:grid-cols-3">
             {dealsPage.cards.map((card, i) => (
-              <Reveal key={card.title} delay={i * 0.06}>
+              <Reveal key={`deal-${i}-${card.title || "card"}`} delay={i * 0.06}>
                 <article className="flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md">
                   <div className="flex items-start justify-between gap-2">
                     <span className="rounded-full bg-gradient-to-r from-amber-100 to-orange-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-950 ring-1 ring-amber-400/30">
