@@ -2,7 +2,7 @@
 
 import { useTicketsOptional } from "@/components/tickets-provider";
 
-type Variant = "hero" | "header" | "navMobile" | "ratesReplay";
+type Variant = "hero" | "header" | "navMobile" | "ratesPrimary";
 
 type Props = {
   variant: Variant;
@@ -48,7 +48,7 @@ export function BuyTicketsButton({ variant, onNavigate }: Props) {
     );
   }
 
-  if (variant === "ratesReplay") {
+  if (variant === "ratesPrimary") {
     return (
       <button
         type="button"

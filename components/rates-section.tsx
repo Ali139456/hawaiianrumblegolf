@@ -38,7 +38,7 @@ function TicketRow({ item }: { item: TicketLine }) {
   const normal = "border-white/10 bg-slate-900/60";
 
   const featured =
-    "border-amber-400/45 bg-gradient-to-br from-amber-950/55 via-slate-900/85 to-emerald-950/30 ring-2 ring-amber-400/35 shadow-[0_0_48px_rgba(251,191,36,0.12)] md:scale-[1.03] md:z-[1]";
+    "border-amber-400/45 bg-gradient-to-br from-amber-950/55 via-slate-900/85 to-emerald-950/30 ring-2 ring-amber-400/35 shadow-[0_0_48px_rgba(251,191,36,0.12)] md:relative md:z-[2] md:scale-[1.03]";
 
   const saleCopy = item.compareAtPrice ? savingsVersusFullRound(item.compareAtPrice, item.price) : null;
 
@@ -96,34 +96,39 @@ function TicketRow({ item }: { item: TicketLine }) {
             </p>
           </div>
           <div className="mt-auto w-full pt-5">
-            <BuyTicketsButton variant="ratesReplay" />
+            <BuyTicketsButton variant="ratesPrimary" />
           </div>
         </>
       ) : (
-        <p className="mt-5 flex flex-wrap items-baseline gap-2">
-          <span className="text-3xl font-bold tracking-tight text-amber-300 sm:text-4xl">
-            {item.pricePrefix ? (
-              <span className="mr-0.5 text-2xl font-bold text-amber-200/90">{item.pricePrefix}</span>
-            ) : null}
-            <span className="align-top text-2xl font-bold text-amber-200/95">$</span>
-            {item.price}
-          </span>
-          {item.priceNote ? (
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-              {item.priceNote}
+        <>
+          <p className="mt-5 flex flex-wrap items-baseline gap-2">
+            <span className="text-3xl font-bold tracking-tight text-amber-300 sm:text-4xl">
+              {item.pricePrefix ? (
+                <span className="mr-0.5 text-2xl font-bold text-amber-200/90">{item.pricePrefix}</span>
+              ) : null}
+              <span className="align-top text-2xl font-bold text-amber-200/95">$</span>
+              {item.price}
             </span>
-          ) : null}
-        </p>
+            {item.priceNote ? (
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {item.priceNote}
+              </span>
+            ) : null}
+          </p>
+          <div className="mt-auto w-full space-y-2.5 pt-5">
+            <BuyTicketsButton variant="ratesPrimary" />
+            {item.cta ? (
+              <Link
+                href={item.cta.href}
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
+              >
+                {item.cta.label}
+              </Link>
+            ) : null}
+          </div>
+        </>
       )}
 
-      {item.cta ? (
-        <Link
-          href={item.cta.href}
-          className="mt-auto inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15 sm:w-auto"
-        >
-          {item.cta.label}
-        </Link>
-      ) : null}
     </div>
   );
 }
