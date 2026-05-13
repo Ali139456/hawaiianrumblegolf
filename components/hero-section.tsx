@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { media, site } from "@/lib/site";
+import { media, type SiteConfig } from "@/lib/site";
 
 const stats = [
   { k: "Courses", v: "Two 18-hole adventures" },
@@ -10,7 +10,7 @@ const stats = [
 
 const statDelays = ["hero-stat-delay-1", "hero-stat-delay-2", "hero-stat-delay-3"] as const;
 
-export function HeroSection() {
+export function HeroSection({ site }: { site: SiteConfig }) {
   return (
     <section className="relative isolate overflow-hidden bg-slate-950">
       <div className="absolute inset-0">

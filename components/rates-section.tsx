@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
 import { MotionItem, StaggerRoot } from "@/components/motion/stagger";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
 type TicketLine = {
   label: string;
@@ -122,7 +122,7 @@ function TicketRow({ item }: { item: TicketLine }) {
   );
 }
 
-export function RatesSection() {
+export function RatesSection({ site }: { site: SiteConfig }) {
   const { rates } = site;
 
   const cards: TicketLine[] = [rates.leftColumn[0], rates.leftColumn[1], rates.rightColumn[0]];

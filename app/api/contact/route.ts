@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { site } from "@/lib/site";
+import { getLiveSite } from "@/lib/site-live";
 
 const resendKey = process.env.RESEND_API_KEY;
 const contactTo = process.env.CONTACT_TO_EMAIL;
@@ -12,6 +12,7 @@ function isValidEmail(value: string) {
 }
 
 export async function POST(req: Request) {
+  const site = await getLiveSite();
   let body: unknown;
   try {
     body = await req.json();

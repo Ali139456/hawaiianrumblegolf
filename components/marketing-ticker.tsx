@@ -1,10 +1,10 @@
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
-export function MarketingTicker() {
+export function MarketingTicker({ site }: { site: SiteConfig }) {
   const phoneLine = `${site.phone} · Walk-ins welcome`;
   const ctaLine = "Walk-ins welcome · come join us on the course";
 
-  const lines = [...site.tickerLines, phoneLine, ctaLine] as const;
+  const lines = [...site.tickerLines, phoneLine, ctaLine];
 
   return (
     <div

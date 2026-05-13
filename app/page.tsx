@@ -10,25 +10,28 @@ import { RatesSection } from "@/components/rates-section";
 import { SiteFooter } from "@/components/site-footer";
 import { StickySiteChrome } from "@/components/sticky-site-chrome";
 import { TestimonialsSection, TestimonialsSectionFallback } from "@/components/testimonials-section";
+import { getLiveSite } from "@/lib/site-live";
 
-export default function Home() {
+export default async function Home() {
+  const site = await getLiveSite();
+
   return (
     <div className="flex min-h-full flex-col">
-      <StickySiteChrome />
+      <StickySiteChrome site={site} />
       <main className="flex-1">
-        <HeroSection />
-        <InfoStrip />
-        <RatesSection />
+        <HeroSection site={site} />
+        <InfoStrip site={site} />
+        <RatesSection site={site} />
         <ExperienceSection />
         <AmenitiesSection />
         <GallerySection />
-        <GiftShopSection />
+        <GiftShopSection site={site} />
         <Suspense fallback={<TestimonialsSectionFallback />}>
-          <TestimonialsSection />
+          <TestimonialsSection site={site} />
         </Suspense>
-        <ContactSection />
+        <ContactSection site={site} />
       </main>
-      <SiteFooter />
+      <SiteFooter site={site} />
     </div>
   );
 }

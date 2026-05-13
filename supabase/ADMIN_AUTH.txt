@@ -1,0 +1,17 @@
+Admin dashboard (/admin/login, /admin/dashboard)
+================================================
+
+1. In Supabase Dashboard: Authentication > Users > Add user
+   - Email: the same value as ADMIN_EMAIL in Vercel / .env.local
+   - Password: choose a strong password (do not commit it to git)
+   - Turn OFF "Confirm email" for that user if you want immediate login, or confirm the email.
+
+2. Run SQL migration 002_site_settings.sql in Supabase SQL Editor (creates site_settings table).
+
+3. Set environment variables (Vercel + local .env.local):
+   - NEXT_PUBLIC_SUPABASE_URL
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY
+   - SUPABASE_SERVICE_ROLE_KEY
+   - ADMIN_EMAIL (must match the Supabase user email exactly, case-insensitive)
+
+4. Passwords are never stored in this repository. If a password was shared in chat, rotate it in Supabase.

@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
 export type GoogleReviewCard = {
   id: string;
@@ -46,8 +46,11 @@ type FindPlaceResponse = {
   error_message?: string;
 };
 
-async function findPlaceId(apiKey: string): Promise<string | null> {
-  const input = `${site.name}, ${site.addressLine}, ${site.cityStateZip}`;
+async function findPlaceId(
+  apiKey: string,
+  venue: Pick<SiteConfig, "name" | "addressLine" | "cityStateZip">,
+): Promise<string | null> {
+  const input = `${venue.name}, ${venue.addressLine}, ${venue.cityStateZip}`;
   const url = new URL("https://maps.googleapis.com/maps/api/place/findplacefromtext/json");
   url.searchParams.set("input", input);
   url.searchParams.set("inputtype", "textquery");
@@ -94,7 +97,7 @@ function mapReviews(result: NonNullable<PlaceDetailsResponse["result"]>): Google
   }));
 }
 
-async function loadGoogleReviews(): Promise<GoogleReviewsResult> {
+async function loadGoogleReviews(site: SiteConfig): Promise<GoogleReviewsResult> {
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     return { status: "unconfigured" };
@@ -104,7 +107,7 @@ async function loadGoogleReviews(): Promise<GoogleReviewsResult> {
   const sitePlaceId = site.googlePlaceId?.trim();
   let placeId = envPlaceId || sitePlaceId || null;
   if (!placeId) {
-    placeId = await findPlaceId(apiKey);
+    placeId = await findPlaceId(apiKey, site);
   }
   if (!placeId) {
     return { status: "error" };
@@ -125,10 +128,17 @@ async function loadGoogleReviews(): Promise<GoogleReviewsResult> {
 }
 
 /** Cached server-side; requires GOOGLE_PLACES_API_KEY (and optionally GOOGLE_PLACE_ID). */
-export async function getGoogleReviewData(): Promise<GoogleReviewsResult> {
+export async function getGoogleReviewData(site: SiteConfig): Promise<GoogleReviewsResult> {
+  const keyParts = [
+    "hawaiian-rumble-google-reviews-v2",
+    site.googlePlaceId ?? "",
+    site.name,
+    site.addressLine,
+    site.cityStateZip,
+  ];
   return unstable_cache(
-    async () => loadGoogleReviews(),
-    ["hawaiian-rumble-google-reviews-v1"],
+    async () => loadGoogleReviews(site),
+    keyParts,
     { revalidate: 43_200 },
   )();
 }

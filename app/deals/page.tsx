@@ -3,19 +3,23 @@ import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { StickySiteChrome } from "@/components/sticky-site-chrome";
-import { site } from "@/lib/site";
+import { getLiveSite } from "@/lib/site-live";
 
-export const metadata: Metadata = {
-  title: "Deals & specials",
-  description: `Current offers and ways to save at ${site.name} in Orlando, FL. Group rates, replay pricing, and window discounts.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const live = await getLiveSite();
+  return {
+    title: "Deals & specials",
+    description: `Current offers and ways to save at ${live.name} in Orlando, FL. Group rates, replay pricing, and window discounts.`,
+  };
+}
 
-export default function DealsPage() {
+export default async function DealsPage() {
+  const site = await getLiveSite();
   const { dealsPage, hours, phone, phoneTel } = site;
 
   return (
     <div className="flex min-h-full flex-col">
-      <StickySiteChrome />
+      <StickySiteChrome site={site} />
       <main className="flex-1">
         <section className="border-b border-slate-200/80 bg-surface px-4 py-16 sm:px-6 sm:py-20">
           <div className="mx-auto max-w-3xl text-center">
@@ -84,7 +88,7 @@ export default function DealsPage() {
           </Reveal>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter site={site} />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
-import { media, site } from "@/lib/site";
+import { media, type SiteConfig } from "@/lib/site";
 
-export function GiftShopSection() {
+export function GiftShopSection({ site }: { site: SiteConfig }) {
   return (
     <section id="texas-movie-shop" className="scroll-mt-24 bg-slate-950 px-4 py-20 text-white sm:px-6">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">

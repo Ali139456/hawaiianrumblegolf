@@ -5,15 +5,15 @@ import { MapPinIcon, PhoneIcon, StorefrontIcon } from "@/components/icons/contac
 import { SimpleBrandIcon } from "@/components/icons/simple-brand-icon";
 import { Reveal } from "@/components/motion/reveal";
 import { MotionItem, StaggerRoot } from "@/components/motion/stagger";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
-const reviewLinks = [
-  { href: site.yelpUrl, label: "Hawaiian Rumble on Yelp", icon: siYelp },
-  { href: site.tripAdvisorUrl, label: "Hawaiian Rumble on Tripadvisor", icon: siTripadvisor },
-  { href: site.facebookUrl, label: "Hawaiian Rumble on Facebook", icon: siFacebook },
-] as const;
+export function SiteFooter({ site }: { site: SiteConfig }) {
+  const reviewLinks = [
+    { href: site.yelpUrl, label: "Hawaiian Rumble on Yelp", icon: siYelp },
+    { href: site.tripAdvisorUrl, label: "Hawaiian Rumble on Tripadvisor", icon: siTripadvisor },
+    { href: site.facebookUrl, label: "Hawaiian Rumble on Facebook", icon: siFacebook },
+  ] as const;
 
-export function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-slate-950 text-slate-300">
       <div className="mx-auto max-w-6xl border-b border-white/10 px-4 py-10 sm:px-6">

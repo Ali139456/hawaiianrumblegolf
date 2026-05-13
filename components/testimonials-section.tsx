@@ -5,7 +5,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
 import { TestimonialsReviewsBlock } from "@/components/testimonials-reviews-block";
 import { getGoogleReviewData, googleWriteReviewUrl, type GoogleReviewCard } from "@/lib/google-reviews";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
 export function TestimonialsSectionFallback() {
   return (
@@ -36,8 +36,8 @@ export function TestimonialsSectionFallback() {
   );
 }
 
-export async function TestimonialsSection() {
-  const data = await getGoogleReviewData();
+export async function TestimonialsSection({ site }: { site: SiteConfig }) {
+  const data = await getGoogleReviewData(site);
 
   const googleCards =
     data.status === "live" ? data.reviews.filter((r) => r.text.length > 0).slice(0, 5) : [];

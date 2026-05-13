@@ -182,6 +182,8 @@ export const site = {
   ],
 } as const;
 
+export type SiteConfig = typeof site;
+
 /** High-res assets from the live Wix site (same imagery as hawaiianrumblegolf.com). */
 export const media = {
   hero: "https://static.wixstatic.com/media/b4b2ad_1b2aef21b5934f028c97725582917b77~mv2.jpg/v1/fit/w_1920,h_1282,q_90,enc_avif,quality_auto/b4b2ad_1b2aef21b5934f028c97725582917b77~mv2.jpg",

@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/motion/reveal";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
-export function InfoStrip() {
+export function InfoStrip({ site }: { site: SiteConfig }) {
   return (
     <section className="border-y border-amber-400/25 bg-gradient-to-r from-amber-400/15 via-orange-500/10 to-sky-400/15">
       <Reveal className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-7">

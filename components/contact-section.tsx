@@ -3,11 +3,11 @@ import { MapPinIcon, PhoneIcon } from "@/components/icons/contact-icons";
 import { Reveal } from "@/components/motion/reveal";
 import { MotionItem, StaggerRoot } from "@/components/motion/stagger";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
-const mapSrc = `https://maps.google.com/maps?q=${site.coordinates.lat},${site.coordinates.lng}&z=15&output=embed`;
+export function ContactSection({ site }: { site: SiteConfig }) {
+  const mapSrc = `https://maps.google.com/maps?q=${site.coordinates.lat},${site.coordinates.lng}&z=15&output=embed`;
 
-export function ContactSection() {
   return (
     <TropicalFramedSection id="contact">
       <>
