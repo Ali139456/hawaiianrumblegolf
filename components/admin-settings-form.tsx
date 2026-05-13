@@ -286,7 +286,7 @@ export function AdminSettingsForm({ initialSite }: Props) {
     "touch-manipulation inline-flex min-h-[44px] w-full flex-1 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-100 transition active:bg-white/15 sm:min-h-0 sm:w-auto sm:flex-none sm:active:bg-white/10";
 
   return (
-    <div className="space-y-5 sm:space-y-8">
+    <div className="space-y-5 pb-[max(8.5rem,calc(5.25rem+env(safe-area-inset-bottom)))] sm:space-y-8 sm:pb-0">
       <div className="flex flex-col gap-4">
         <div className="min-w-0">
           <p className="break-words text-sm leading-relaxed text-slate-400">

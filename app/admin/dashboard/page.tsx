@@ -35,7 +35,7 @@ export default async function AdminDashboardPage() {
         </div>
       </header>
 
-      <div className="relative mx-auto max-w-4xl px-3 pb-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.75rem))] pt-6 sm:px-6 sm:pb-10 sm:pt-10">
+      <div className="relative mx-auto max-w-4xl px-3 pb-[max(8.5rem,calc(env(safe-area-inset-bottom)+7rem))] pt-6 sm:px-6 sm:pb-10 sm:pt-10">
         <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-4 shadow-2xl backdrop-blur-md sm:rounded-[1.75rem] sm:p-8 md:backdrop-blur-xl">
           <AdminSettingsForm initialSite={initial} />
         </div>
