@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+const inputClass =
+  "mt-2 w-full rounded-xl border border-white/12 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition focus:border-amber-400/45 focus:ring-2 focus:ring-amber-400/15";
+
 export function AdminLoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -32,9 +35,9 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 space-y-4">
+    <form onSubmit={onSubmit} className="mt-8 space-y-5">
       <div>
-        <label htmlFor="admin-email" className="block text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <label htmlFor="admin-email" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-200/75">
           Email
         </label>
         <input
@@ -44,11 +47,11 @@ export function AdminLoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none ring-amber-400/0 transition focus:border-amber-400/40 focus:ring-2 focus:ring-amber-400/30"
+          className={inputClass}
         />
       </div>
       <div>
-        <label htmlFor="admin-password" className="block text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <label htmlFor="admin-password" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-200/75">
           Password
         </label>
         <input
@@ -58,16 +61,16 @@ export function AdminLoginForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none ring-amber-400/0 transition focus:border-amber-400/40 focus:ring-2 focus:ring-amber-400/30"
+          className={inputClass}
         />
       </div>
       {error ? (
-        <p className="rounded-lg border border-rose-500/30 bg-rose-950/50 px-3 py-2 text-sm text-rose-100">{error}</p>
+        <p className="rounded-xl border border-rose-500/35 bg-rose-950/50 px-4 py-3 text-sm text-rose-100">{error}</p>
       ) : null}
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-orange-500/25 transition enabled:hover:brightness-105 disabled:opacity-60"
+        className="w-full rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 py-3.5 text-sm font-bold text-slate-950 shadow-[0_8px_32px_rgba(249,115,22,0.35)] ring-2 ring-white/15 transition enabled:hover:brightness-110 enabled:active:scale-[0.99] disabled:opacity-55"
       >
         {loading ? "Signing in…" : "Sign in"}
       </button>
