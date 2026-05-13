@@ -29,6 +29,57 @@ const EMPTY_DEAL_CARD: DealCardForm = {
 /** Upper bound so the JSON payload stays reasonable; raise if needed. */
 const MAX_DEAL_CARDS = 24;
 
+type SectionKey = "general" | "hours" | "links" | "rates" | "deals";
+
+const SECTION_NAV: { key: SectionKey; label: string }[] = [
+  { key: "general", label: "General" },
+  { key: "hours", label: "Hours" },
+  { key: "links", label: "Links" },
+  { key: "rates", label: "Rates" },
+  { key: "deals", label: "Deals" },
+];
+
+const SECTION_ALL_OPEN: Record<SectionKey, boolean> = {
+  general: true,
+  hours: true,
+  links: true,
+  rates: true,
+  deals: true,
+};
+
+const SECTION_COMPACT: Record<SectionKey, boolean> = {
+  general: true,
+  hours: false,
+  links: false,
+  rates: false,
+  deals: false,
+};
+
+const SECTION_ALL_CLOSED: Record<SectionKey, boolean> = {
+  general: false,
+  hours: false,
+  links: false,
+  rates: false,
+  deals: false,
+};
+
+function SectionChevron({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      aria-hidden
+      className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
 function cloneSite(s: SiteConfig): SiteConfig {
   return structuredClone(s);
 }
@@ -92,6 +143,14 @@ export function AdminSettingsForm({ initialSite }: Props) {
   const [dealsSubtitle, setDealsSubtitle] = useState<string>(base.dealsPage.subtitle);
   const [dealsFootnote, setDealsFootnote] = useState<string>(base.dealsPage.footnote);
   const [dealCards, setDealCards] = useState<DealCardForm[]>(() => dealCardsFromBase(base));
+  const [sectionOpen, setSectionOpen] = useState<Record<SectionKey, boolean>>(() => ({ ...SECTION_ALL_OPEN }));
+
+  function goToSection(key: SectionKey) {
+    setSectionOpen((prev) => ({ ...prev, [key]: true }));
+    requestAnimationFrame(() => {
+      document.getElementById(`admin-section-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 
   function setDealCard(index: number, patch: Partial<DealCardForm>) {
     setDealCards((prev) => prev.map((c, i) => (i === index ? { ...c, ...patch } : c)));
@@ -212,7 +271,7 @@ export function AdminSettingsForm({ initialSite }: Props) {
     "touch-manipulation min-h-[44px] w-full max-w-full rounded-xl border border-white/12 bg-slate-950/60 px-3.5 py-2.5 text-base leading-snug text-slate-100 placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none transition focus:border-amber-400/40 focus:ring-2 focus:ring-amber-400/15 sm:min-h-0 sm:text-sm";
   const ta = (min: string) => `${input} resize-y leading-relaxed ${min}`;
   const section =
-    "rounded-2xl border border-white/[0.08] bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 sm:backdrop-blur-md";
+    "scroll-mt-[8.5rem] rounded-2xl border border-white/[0.08] bg-gradient-to-br from-slate-900/80 to-slate-950/90 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:scroll-mt-36 sm:p-6 sm:backdrop-blur-md";
   const sectionTitle = "text-base font-bold tracking-tight text-white sm:text-lg";
   const sectionHint = "mt-1 text-sm leading-relaxed text-slate-400";
   const dealShellStyles = [
@@ -267,15 +326,65 @@ export function AdminSettingsForm({ initialSite }: Props) {
         </div>
       ) : null}
 
-      <section className={section}>
-        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+      <nav
+        className="sticky top-0 z-20 rounded-2xl border border-white/10 bg-slate-950/92 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-md supports-[backdrop-filter]:bg-slate-950/88 sm:top-1"
+        aria-label="Form sections"
+      >
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-200/80">Jump to</p>
+        <div className="mt-2 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {SECTION_NAV.map(({ key, label }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => goToSection(key)}
+              className="touch-manipulation shrink-0 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 transition hover:border-amber-400/40 hover:bg-white/10 active:bg-white/15"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-3">
+          <button
+            type="button"
+            onClick={() => setSectionOpen({ ...SECTION_ALL_OPEN })}
+            className="touch-manipulation rounded-lg border border-white/12 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+          >
+            Expand all
+          </button>
+          <button
+            type="button"
+            onClick={() => setSectionOpen({ ...SECTION_COMPACT })}
+            className="touch-manipulation rounded-lg border border-teal-500/25 bg-teal-950/35 px-3 py-2 text-xs font-semibold text-teal-100 transition hover:bg-teal-950/50"
+          >
+            Compact
+          </button>
+          <button
+            type="button"
+            onClick={() => setSectionOpen({ ...SECTION_ALL_CLOSED })}
+            className="touch-manipulation rounded-lg border border-white/12 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+          >
+            Collapse all
+          </button>
+        </div>
+      </nav>
+
+      <section id="admin-section-general" className={section}>
+        <button
+          type="button"
+          className="flex w-full min-w-0 touch-manipulation items-start gap-3 text-left sm:items-center"
+          onClick={() => setSectionOpen((o) => ({ ...o, general: !o.general }))}
+          aria-expanded={sectionOpen.general}
+          aria-controls="admin-panel-general"
+        >
           <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" aria-hidden />
           <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>General</h2>
             <p className={sectionHint}>Business name, tagline, and contact basics.</p>
           </div>
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <SectionChevron expanded={sectionOpen.general} />
+        </button>
+        {sectionOpen.general ? (
+          <div id="admin-panel-general" className="mt-6 grid gap-4 sm:grid-cols-2">
           <label className="block sm:col-span-2">
             <span className={label}>Business name</span>
             <input className={input} value={name} onChange={(e) => setName(e.target.value)} />
@@ -309,17 +418,26 @@ export function AdminSettingsForm({ initialSite }: Props) {
             <input className={input} value={cityStateZip} onChange={(e) => setCityStateZip(e.target.value)} />
           </label>
         </div>
+        ) : null}
       </section>
 
-      <section className={section}>
-        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+      <section id="admin-section-hours" className={section}>
+        <button
+          type="button"
+          className="flex w-full min-w-0 touch-manipulation items-start gap-3 text-left sm:items-center"
+          onClick={() => setSectionOpen((o) => ({ ...o, hours: !o.hours }))}
+          aria-expanded={sectionOpen.hours}
+          aria-controls="admin-panel-hours"
+        >
           <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-teal-400 to-emerald-500" aria-hidden />
           <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Hours &amp; ticker</h2>
             <p className={sectionHint}>Hours show in the info strip; ticker lines scroll in the header.</p>
           </div>
-        </div>
-        <div className="mt-6 grid gap-4">
+          <SectionChevron expanded={sectionOpen.hours} />
+        </button>
+        {sectionOpen.hours ? (
+          <div id="admin-panel-hours" className="mt-6 grid gap-4">
           <label className="block">
             <span className={label}>Week hours (one line)</span>
             <input className={input} value={hoursWeek} onChange={(e) => setHoursWeek(e.target.value)} />
@@ -334,17 +452,26 @@ export function AdminSettingsForm({ initialSite }: Props) {
             <textarea className={ta("min-h-[160px]")} value={tickerText} onChange={(e) => setTickerText(e.target.value)} />
           </label>
         </div>
+        ) : null}
       </section>
 
-      <section className={section}>
-        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+      <section id="admin-section-links" className={section}>
+        <button
+          type="button"
+          className="flex w-full min-w-0 touch-manipulation items-start gap-3 text-left sm:items-center"
+          onClick={() => setSectionOpen((o) => ({ ...o, links: !o.links }))}
+          aria-expanded={sectionOpen.links}
+          aria-controls="admin-panel-links"
+        >
           <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-sky-400 to-indigo-500" aria-hidden />
           <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Links</h2>
             <p className={sectionHint}>Maps, reviews, and social profiles.</p>
           </div>
-        </div>
-        <div className="mt-6 grid gap-4">
+          <SectionChevron expanded={sectionOpen.links} />
+        </button>
+        {sectionOpen.links ? (
+          <div id="admin-panel-links" className="mt-6 grid gap-4">
           <label className="block sm:col-span-2">
             <span className={label}>Google Maps (place)</span>
             <input className={input} value={mapsUrl} onChange={(e) => setMapsUrl(e.target.value)} />
@@ -370,17 +497,26 @@ export function AdminSettingsForm({ initialSite }: Props) {
             <input className={input} value={tripAdvisorUrl} onChange={(e) => setTripAdvisorUrl(e.target.value)} />
           </label>
         </div>
+        ) : null}
       </section>
 
-      <section className={section}>
-        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+      <section id="admin-section-rates" className={section}>
+        <button
+          type="button"
+          className="flex w-full min-w-0 touch-manipulation items-start gap-3 text-left sm:items-center"
+          onClick={() => setSectionOpen((o) => ({ ...o, rates: !o.rates }))}
+          aria-expanded={sectionOpen.rates}
+          aria-controls="admin-panel-rates"
+        >
           <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-amber-400 to-rose-500" aria-hidden />
           <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Rates</h2>
             <p className={sectionHint}>Homepage rates section — single, replay, and group rows.</p>
           </div>
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <SectionChevron expanded={sectionOpen.rates} />
+        </button>
+        {sectionOpen.rates ? (
+          <div id="admin-panel-rates" className="mt-6 grid gap-4 sm:grid-cols-2">
           <label className="block sm:col-span-2">
             <span className={label}>Section title</span>
             <input className={input} value={ratesTitle} onChange={(e) => setRatesTitle(e.target.value)} />
@@ -454,10 +590,17 @@ export function AdminSettingsForm({ initialSite }: Props) {
             <textarea className={ta("min-h-[100px]")} value={footnotesText} onChange={(e) => setFootnotesText(e.target.value)} />
           </label>
         </div>
+        ) : null}
       </section>
 
-      <section className={section}>
-        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+      <section id="admin-section-deals" className={section}>
+        <button
+          type="button"
+          className="flex w-full min-w-0 touch-manipulation items-start gap-3 text-left sm:items-center"
+          onClick={() => setSectionOpen((o) => ({ ...o, deals: !o.deals }))}
+          aria-expanded={sectionOpen.deals}
+          aria-controls="admin-panel-deals"
+        >
           <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-gradient-to-b from-orange-400 to-pink-500" aria-hidden />
           <div className="min-w-0 flex-1">
             <h2 className={sectionTitle}>Deals page</h2>
@@ -465,24 +608,27 @@ export function AdminSettingsForm({ initialSite }: Props) {
               Plain text for <span className="text-slate-200">/deals</span> — title, intro, footnote, and as many offer cards as you need (discounts, group deals, window rates, etc.).
             </p>
           </div>
-        </div>
-        <div className="mt-6 space-y-4">
-          <label className="block">
-            <span className={label}>Page title</span>
-            <input className={input} value={dealsTitle} onChange={(e) => setDealsTitle(e.target.value)} />
-          </label>
-          <label className="block">
-            <span className={label}>Subtitle</span>
-            <textarea className={ta("min-h-[88px]")} value={dealsSubtitle} onChange={(e) => setDealsSubtitle(e.target.value)} />
-          </label>
-          <label className="block">
-            <span className={label}>Footnote</span>
-            <textarea className={ta("min-h-[72px]")} value={dealsFootnote} onChange={(e) => setDealsFootnote(e.target.value)} />
-          </label>
-        </div>
+          <SectionChevron expanded={sectionOpen.deals} />
+        </button>
+        {sectionOpen.deals ? (
+          <div id="admin-panel-deals">
+            <div className="mt-6 space-y-4">
+              <label className="block">
+                <span className={label}>Page title</span>
+                <input className={input} value={dealsTitle} onChange={(e) => setDealsTitle(e.target.value)} />
+              </label>
+              <label className="block">
+                <span className={label}>Subtitle</span>
+                <textarea className={ta("min-h-[88px]")} value={dealsSubtitle} onChange={(e) => setDealsSubtitle(e.target.value)} />
+              </label>
+              <label className="block">
+                <span className={label}>Footnote</span>
+                <textarea className={ta("min-h-[72px]")} value={dealsFootnote} onChange={(e) => setDealsFootnote(e.target.value)} />
+              </label>
+            </div>
 
-        <div className="mt-8 space-y-6">
-          {dealCards.map((card, i) => (
+            <div className="mt-8 space-y-6">
+              {dealCards.map((card, i) => (
             <div key={i} className={dealShell(i)}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Offer {i + 1}</p>
@@ -532,24 +678,26 @@ export function AdminSettingsForm({ initialSite }: Props) {
                 </label>
               </div>
             </div>
-          ))}
-          <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
-            <button
-              type="button"
-              onClick={() => addDealCard()}
-              disabled={dealCards.length >= MAX_DEAL_CARDS}
-              className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-dashed border-amber-400/35 bg-amber-500/5 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-400/55 hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:w-auto"
-            >
-              <span className="text-lg font-bold leading-none text-amber-300" aria-hidden>
-                +
-              </span>
-              Add offer / special
-            </button>
-            {dealCards.length >= MAX_DEAL_CARDS ? (
-              <span className="text-xs text-slate-500">Maximum {MAX_DEAL_CARDS} offers.</span>
-            ) : null}
+              ))}
+              <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:items-center">
+                <button
+                  type="button"
+                  onClick={() => addDealCard()}
+                  disabled={dealCards.length >= MAX_DEAL_CARDS}
+                  className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-dashed border-amber-400/35 bg-amber-500/5 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-400/55 hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:w-auto"
+                >
+                  <span className="text-lg font-bold leading-none text-amber-300" aria-hidden>
+                    +
+                  </span>
+                  Add offer / special
+                </button>
+                {dealCards.length >= MAX_DEAL_CARDS ? (
+                  <span className="text-xs text-slate-500">Maximum {MAX_DEAL_CARDS} offers.</span>
+                ) : null}
+              </div>
+            </div>
           </div>
-        </div>
+        ) : null}
       </section>
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/15 bg-slate-950/92 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-lg supports-[backdrop-filter]:bg-slate-950/88 sm:relative sm:inset-x-auto sm:bottom-auto sm:z-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 sm:pb-0 sm:backdrop-blur-none">
