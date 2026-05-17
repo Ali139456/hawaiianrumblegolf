@@ -89,7 +89,7 @@ function TicketRow({ item }: { item: TicketLine }) {
       {item.compareAtPrice ? (
         <>
           <div className="mt-5 space-y-2">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300/95">Play again · same day</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300/95">Add Second · same day</p>
             <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
               <span className="flex items-baseline gap-1 text-slate-500">
                 <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Was</span>

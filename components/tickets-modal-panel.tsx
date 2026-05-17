@@ -119,7 +119,7 @@ function buildOfferings(): OfferingDef[] {
     {
       id: "replay",
       title: `${replay.label} · same day`,
-      tagline: "Per person · play again after a paid first round",
+      tagline: "Per person · add second round after a paid first round",
       detail: replay.detail,
       priceLine: `From $${replay.price}`,
       unitUsd: parseUsd(replay.price),
@@ -138,7 +138,7 @@ function buildOfferings(): OfferingDef[] {
 
 function categoryLabel(id: PricedOfferingId) {
   if (id === "first") return "Single";
-  if (id === "replay") return "Play again";
+  if (id === "replay") return "Add Second";
   return "Group";
 }
 
@@ -389,7 +389,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                     aria-pressed={on}
                     title={
                       replayNeedsFirst
-                        ? "Adds 1st game and another 18 — play-again is same day after a paid first round"
+                        ? "Adds 1st game and another 18 — add second is same day after a paid first round"
                         : undefined
                     }
                     className={`touch-manipulation group relative flex min-h-[158px] flex-col rounded-2xl border-2 p-4 text-left transition motion-safe:duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.99] ${

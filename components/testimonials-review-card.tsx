@@ -82,14 +82,15 @@ export function TestimonialReviewCard({ review, useGoogle, compact }: Testimonia
   const innerR = compact ? "rounded-[1rem]" : "rounded-[1.3rem]";
   const pad = compact ? "px-4 pb-4 pt-5" : "px-6 pb-6 pt-7 sm:px-7";
   const quoteSize = compact ? "text-[2.75rem] top-2 -left-0.5" : "text-[4.5rem] top-3 -left-1";
+  const minH = compact ? "min-h-[20rem]" : "min-h-[19.5rem]";
 
   return (
-    <article className="group relative flex h-full flex-col">
+    <article className="group relative flex h-full min-h-full flex-col">
       <div
-        className={`${outerR} bg-gradient-to-br from-amber-500/20 via-slate-700/50 to-teal-500/20 p-[1px] shadow-[0_12px_40px_-14px_rgba(0,0,0,0.35)] transition-all duration-300 md:group-hover:-translate-y-1 md:group-hover:shadow-[0_20px_50px_-16px_rgba(13,148,136,0.2)]`}
+        className={`flex h-full min-h-full flex-col ${outerR} bg-gradient-to-br from-amber-500/20 via-slate-700/50 to-teal-500/20 p-[1px] shadow-[0_12px_40px_-14px_rgba(0,0,0,0.35)] transition-all duration-300 md:group-hover:-translate-y-1 md:group-hover:shadow-[0_20px_50px_-16px_rgba(13,148,136,0.2)]`}
       >
         <div
-          className={`relative flex h-full flex-col overflow-hidden ${innerR} border border-white/10 bg-gradient-to-b from-surface-elevated via-surface-elevated to-emerald-950/20 ${pad} backdrop-blur-sm`}
+          className={`relative flex h-full min-h-full flex-col overflow-hidden ${innerR} border border-white/10 bg-gradient-to-b from-surface-elevated via-surface-elevated to-emerald-950/20 ${pad} ${minH} backdrop-blur-sm`}
         >
           <span
             className={`pointer-events-none absolute font-serif leading-none text-emerald-600/[0.07] ${quoteSize}`}
@@ -114,11 +115,11 @@ export function TestimonialReviewCard({ review, useGoogle, compact }: Testimonia
             </div>
           </div>
           <blockquote
-            className={`relative flex-1 border-t border-white/10 font-medium text-slate-300 ${
+            className={`relative mt-auto flex min-h-[9.5rem] flex-1 flex-col border-t border-white/10 font-medium text-slate-300 ${
               compact ? "mt-3 pt-3 text-[13px] leading-relaxed" : "mt-5 pt-5 text-[15px] leading-relaxed"
             }`}
           >
-            <span className={compact ? "line-clamp-5" : "line-clamp-7"}>{review.text}</span>
+            <span className="line-clamp-6">{review.text}</span>
           </blockquote>
         </div>
       </div>

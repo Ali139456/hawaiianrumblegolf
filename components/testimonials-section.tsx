@@ -5,7 +5,13 @@ import { SimpleBrandIcon } from "@/components/icons/simple-brand-icon";
 import { Reveal } from "@/components/motion/reveal";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
 import { TestimonialsReviewsBlock } from "@/components/testimonials-reviews-block";
-import { getGoogleReviewData, googleWriteReviewUrl, type GoogleReviewCard } from "@/lib/google-reviews";
+import {
+  DISPLAY_REVIEW_COUNT,
+  getGoogleReviewData,
+  googleWriteReviewUrl,
+  selectReviewsForDisplay,
+  type GoogleReviewCard,
+} from "@/lib/google-reviews";
 import { HOME_SECTIONS, homeHash } from "@/lib/site-paths";
 import type { SiteConfig } from "@/lib/site";
 
@@ -42,16 +48,17 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
   const data = await getGoogleReviewData(site);
 
   const googleCards =
-    data.status === "live" ? data.reviews.filter((r) => r.text.length > 0).slice(0, 5) : [];
+    data.status === "live" ? selectReviewsForDisplay(data.reviews) : [];
 
   const useGoogle = googleCards.length > 0;
 
-  const featured = site.featuredTestimonials.map((t, i) => ({
+  const featured = site.featuredTestimonials.slice(0, DISPLAY_REVIEW_COUNT).map((t, i) => ({
     id: `f-${i}`,
     authorName: t.name,
     rating: t.rating,
     text: t.quote,
     relativeTime: "",
+    reviewTime: 0,
     profilePhotoUrl: null as string | null,
   }));
 
@@ -149,7 +156,8 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
 
         {useGoogle ? (
           <p className="mt-8 rounded-2xl border border-white/10 bg-surface-muted/60 px-4 py-3 text-xs leading-relaxed text-muted backdrop-blur-sm">
-            Google shares up to five reviews per API request. Tap{" "}
+            Showing the six most recent reviews we have on file (Google shares up to five per API
+            refresh; we keep a rolling cache). Tap{" "}
             <span className="font-semibold text-slate-300">&quot;Read all reviews on Google&quot;</span> for the full list.
           </p>
         ) : data.status === "error" ? (

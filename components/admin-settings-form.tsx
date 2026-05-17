@@ -547,7 +547,7 @@ export function AdminSettingsForm({ initialSite }: Props) {
             </div>
           </div>
           <div className="sm:col-span-2 rounded-xl border border-amber-400/20 bg-amber-950/15 p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-200/90">Another 18 holes (play again)</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-200/90">Another 18 holes (add second)</p>
             <div className="mt-3 grid gap-3 sm:grid-cols-3">
               <label className="block">
                 <span className={label}>Label</span>

@@ -70,8 +70,8 @@ export function TestimonialsReviewsBlock({ cards, useGoogle }: Props) {
         aria-roledescription="carousel"
         aria-label="Guest reviews"
       >
-        <div className="relative px-0.5">
-          <div id="testimonials-carousel-panel" aria-live="polite" aria-atomic="true">
+        <div className="relative min-h-[22rem] px-0.5">
+          <div id="testimonials-carousel-panel" className="h-full" aria-live="polite" aria-atomic="true">
             <TestimonialReviewCard key={current.id} review={current} useGoogle={useGoogle} compact />
           </div>
         </div>
@@ -85,9 +85,9 @@ export function TestimonialsReviewsBlock({ cards, useGoogle }: Props) {
         </div>
       </section>
 
-      <StaggerRoot className="mt-10 hidden gap-7 md:mt-14 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+      <StaggerRoot className="mt-10 hidden auto-rows-fr gap-7 md:mt-14 md:grid md:grid-cols-2 md:items-stretch lg:grid-cols-3 lg:gap-8">
         {cards.map((r, i) => (
-          <MotionItem key={r.id} lift index={i}>
+          <MotionItem key={r.id} lift index={i} className="h-full">
             <TestimonialReviewCard review={r} useGoogle={useGoogle} />
           </MotionItem>
         ))}

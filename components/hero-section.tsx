@@ -3,7 +3,7 @@ import { media, type SiteConfig } from "@/lib/site";
 
 const stats = [
   { k: "Courses", v: "Two 18-hole adventures" },
-  { k: "Play again", v: "Another 18 · $9.95 same day" },
+  { k: "Add Second", v: "Another 18 · $9.95 same day" },
   { k: "Vibe", v: "Music & tropical fun" },
 ] as const;
 
