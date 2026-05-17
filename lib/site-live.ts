@@ -41,11 +41,31 @@ async function loadStoredOverrides(): Promise<Record<string, unknown>> {
   return data.content as Record<string, unknown>;
 }
 
+/** Admin/CMS copies may still say 10 AM — keep opening time in sync with `defaultSite`. */
+function patchLegacyOpeningTime(text: string): string {
+  return text
+    .replace(/Sunday – Thursday \| 10:00 AM/g, "Sunday – Thursday | 9:00 AM")
+    .replace(/Friday & Saturday \| 10:00 AM/g, "Friday & Saturday | 9:00 AM")
+    .replace(/Sun–Thu 10AM/g, "Sun–Thu 9AM")
+    .replace(/Fri–Sat 10AM/g, "Fri–Sat 9AM");
+}
+
+function normalizeSiteConfig(merged: SiteConfig): SiteConfig {
+  const hours = {
+    week: patchLegacyOpeningTime(merged.hours.week),
+    weekend: patchLegacyOpeningTime(merged.hours.weekend),
+  } as SiteConfig["hours"];
+  const tickerLines = merged.tickerLines.map((line) =>
+    patchLegacyOpeningTime(line),
+  );
+  return { ...merged, hours, tickerLines } as unknown as SiteConfig;
+}
+
 async function computeMergedSite(): Promise<SiteConfig> {
   const base = siteToWritable();
   const overrides = await loadStoredOverrides();
   const merged = deepMerge(base, overrides);
-  return merged as SiteConfig;
+  return normalizeSiteConfig(merged as SiteConfig);
 }
 
 export const getLiveSite = unstable_cache(computeMergedSite, ["merged-site"], {

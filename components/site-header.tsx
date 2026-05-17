@@ -33,8 +33,8 @@ export function SiteHeader() {
         aria-hidden
       />
 
-      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-4">
-        <div className="shrink-0 justify-self-start">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-3 py-3 pl-2 pr-4 sm:gap-4 sm:py-4 sm:pl-3 sm:pr-6 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-4 md:pl-4">
+        <div className="shrink-0 justify-self-start -ml-0.5 sm:-ml-1 md:-ml-2">
           <div className="transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]">
             <Link
               href="/"

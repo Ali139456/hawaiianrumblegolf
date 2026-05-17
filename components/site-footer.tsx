@@ -88,7 +88,7 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
               </ul>
             </nav>
             <p className="mt-6 text-sm font-semibold uppercase tracking-widest text-amber-300/90">Hours</p>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-3 space-y-2 text-base font-medium text-slate-200">
               <li>{site.hours.week}</li>
               <li>{site.hours.weekend}</li>
             </ul>

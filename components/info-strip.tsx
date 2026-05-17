@@ -20,10 +20,10 @@ export function InfoStrip({ site }: { site: SiteConfig }) {
           </p>
         </div>
         <ul className="flex flex-col gap-2.5 border-t border-amber-500/25 pt-4 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-8 md:justify-between">
-          <li className="rounded-xl bg-white/5 px-3 py-2 text-center text-sm font-medium text-slate-200 shadow-sm backdrop-blur-sm sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 sm:text-left sm:shadow-none">
+          <li className="rounded-xl bg-white/5 px-3 py-2 text-center text-base font-semibold text-white shadow-sm backdrop-blur-sm sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 sm:text-left sm:shadow-none">
             {site.hours.week}
           </li>
-          <li className="rounded-xl bg-white/5 px-3 py-2 text-center text-sm font-medium text-slate-200 shadow-sm backdrop-blur-sm sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 sm:text-left sm:shadow-none">
+          <li className="rounded-xl bg-white/5 px-3 py-2 text-center text-base font-semibold text-white shadow-sm backdrop-blur-sm sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 sm:text-left sm:shadow-none">
             {site.hours.weekend}
           </li>
         </ul>
