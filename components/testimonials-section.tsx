@@ -154,13 +154,7 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
           </Reveal>
         </div>
 
-        {useGoogle ? (
-          <p className="mt-8 rounded-2xl border border-white/10 bg-surface-muted/60 px-4 py-3 text-xs leading-relaxed text-muted backdrop-blur-sm">
-            Showing the six most recent reviews we have on file (Google shares up to five per API
-            refresh; we keep a rolling cache). Tap{" "}
-            <span className="font-semibold text-slate-300">&quot;Read all reviews on Google&quot;</span> for the full list.
-          </p>
-        ) : data.status === "error" ? (
+        {data.status === "error" ? (
           <p className="mt-8 rounded-2xl border border-amber-200/90 bg-gradient-to-r from-amber-50/95 to-orange-50/80 px-4 py-3 text-sm text-amber-950 shadow-sm backdrop-blur-sm">
             Live Google reviews could not be loaded
             {data.reason ? ` (${data.reason})` : ""}. Check your API key, billing, and that{" "}
