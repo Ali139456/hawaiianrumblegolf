@@ -5,10 +5,10 @@ import { media } from "@/lib/site";
 
 export function GallerySection() {
   return (
-    <section id="gallery" className="scroll-mt-24 bg-white px-4 py-20 sm:px-6">
+    <section id="gallery" className="scroll-mt-24 border-y border-white/5 bg-surface-muted px-4 py-20 sm:px-6">
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
             On the course
           </h2>
           <p className="mt-3 text-lg text-muted">
@@ -22,7 +22,7 @@ export function GallerySection() {
               key={src}
               index={i}
               lift
-              className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm transition-shadow hover:shadow-md"
+              className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-sm shadow-black/30 transition-shadow hover:shadow-md hover:shadow-black/40"
             >
               <Image
                 src={src}

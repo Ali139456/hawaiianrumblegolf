@@ -9,7 +9,7 @@ import type { SiteConfig } from "@/lib/site";
 
 export function TestimonialsSectionFallback() {
   return (
-    <TropicalFramedSection id="testimonials" className="border-y border-emerald-900/10">
+    <TropicalFramedSection id="testimonials" className="border-y border-white/5">
       <>
         <div className="mx-auto max-w-xl space-y-3 text-center lg:mx-0 lg:max-w-none lg:text-left">
           <div className="mx-auto h-3 w-24 animate-pulse rounded-full bg-gradient-to-r from-emerald-200/60 to-teal-200/50 lg:mx-0" />
@@ -60,7 +60,7 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
 
   const summary =
     data.status === "live" && (data.rating != null || data.userRatingsTotal != null) ? (
-      <div className="mt-4 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-800/10 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+      <div className="mt-4 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-500/20 bg-surface-elevated/80 px-4 py-2.5 shadow-sm backdrop-blur-sm">
         {data.rating != null ? (
           <span className="text-sm text-slate-700">
             <span className="text-lg font-bold tabular-nums text-emerald-800">{data.rating.toFixed(1)}</span>
@@ -81,19 +81,19 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
     ) : null;
 
   return (
-    <TropicalFramedSection id="testimonials" className="border-y border-emerald-900/10">
+    <TropicalFramedSection id="testimonials" className="border-y border-white/5">
       <>
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
           <Reveal className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-teal-800/75 sm:text-xs">
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-teal-400/90 sm:text-xs">
               Voices from the course
             </p>
             <div className="mt-3 flex flex-wrap items-end gap-3">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-[2.15rem] sm:leading-tight">
+              <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-[2.15rem] sm:leading-tight">
                 Guest reviews
               </h2>
               {useGoogle ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-gradient-to-r from-white to-emerald-50/90 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm ring-1 ring-emerald-900/5">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-gradient-to-r from-surface-elevated to-emerald-950/40 px-3 py-1.5 text-xs font-semibold text-slate-300 shadow-sm ring-1 ring-white/10">
                   <span style={{ color: `#${siGoogle.hex}` }} className="inline-flex">
                     <SimpleBrandIcon icon={siGoogle} className="h-3.5 w-3.5" />
                   </span>
@@ -111,12 +111,12 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
           </Reveal>
 
           <Reveal
-            className="flex w-full flex-col gap-3 rounded-3xl border border-white/70 bg-gradient-to-br from-white/90 via-white/70 to-emerald-50/50 p-5 shadow-[0_12px_40px_-12px_rgba(13,148,136,0.18)] backdrop-blur-md sm:flex-row sm:p-4 lg:w-auto lg:min-w-[260px] lg:flex-col lg:p-5"
+            className="flex w-full flex-col gap-3 rounded-3xl border border-white/10 bg-gradient-to-br from-surface-elevated via-surface-muted to-emerald-950/30 p-5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.35)] backdrop-blur-md sm:flex-row sm:p-4 lg:w-auto lg:min-w-[260px] lg:flex-col lg:p-5"
             y={10}
           >
             <Link
               href="/#contact"
-              className="inline-flex items-center justify-center rounded-full border border-slate-200/90 bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-amber-400/60 hover:shadow-md"
+              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-ink shadow-sm transition hover:border-amber-400/60 hover:bg-white/10 hover:shadow-md"
             >
               Give us feedback
             </Link>
@@ -135,7 +135,7 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
               href={site.googleMapsReviewsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-sm font-semibold text-teal-800 underline decoration-teal-800/25 underline-offset-[5px] transition hover:decoration-teal-700 sm:text-left"
+              className="text-center text-sm font-semibold text-teal-400 underline decoration-teal-400/30 underline-offset-[5px] transition hover:decoration-teal-300 sm:text-left"
             >
               Read all reviews on Google →
             </a>
@@ -143,9 +143,9 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
         </div>
 
         {useGoogle ? (
-          <p className="mt-8 rounded-2xl border border-emerald-900/[0.06] bg-white/50 px-4 py-3 text-xs leading-relaxed text-muted backdrop-blur-sm">
+          <p className="mt-8 rounded-2xl border border-white/10 bg-surface-muted/60 px-4 py-3 text-xs leading-relaxed text-muted backdrop-blur-sm">
             Google shares up to five reviews per API request. Tap{" "}
-            <span className="font-semibold text-slate-700">&quot;Read all reviews on Google&quot;</span> for the full list.
+            <span className="font-semibold text-slate-300">&quot;Read all reviews on Google&quot;</span> for the full list.
           </p>
         ) : data.status === "error" ? (
           <p className="mt-8 rounded-2xl border border-amber-200/90 bg-gradient-to-r from-amber-50/95 to-orange-50/80 px-4 py-3 text-sm text-amber-950 shadow-sm backdrop-blur-sm">

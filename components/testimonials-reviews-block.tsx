@@ -25,7 +25,7 @@ function CarouselArrow({
       disabled={disabled}
       aria-label={label}
       aria-controls="testimonials-carousel-panel"
-      className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-emerald-900/12 bg-white text-emerald-900 shadow-md ring-1 ring-white/80 transition enabled:hover:border-amber-400/45 enabled:hover:shadow-lg enabled:active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+      className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-surface-elevated text-emerald-300 shadow-md ring-1 ring-white/10 transition enabled:hover:border-amber-400/45 enabled:hover:shadow-lg enabled:active:scale-95 disabled:pointer-events-none disabled:opacity-40"
     >
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
         {direction === "prev" ? (

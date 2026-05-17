@@ -43,19 +43,19 @@ const cardStyles = [
     icon: IconFamily,
     chip: "After the parks",
     iconWrap: "from-amber-400 to-orange-500 shadow-amber-500/25",
-    frame: "from-amber-200/45 via-white/70 to-orange-100/35",
+    frame: "from-amber-500/25 via-slate-800/80 to-orange-950/40",
   },
   {
     icon: IconSparkle,
     chip: "Lights & music",
     iconWrap: "from-fuchsia-500 to-rose-500 shadow-rose-500/25",
-    frame: "from-pink-200/40 via-white/70 to-rose-100/35",
+    frame: "from-fuchsia-500/20 via-slate-800/80 to-rose-950/35",
   },
   {
     icon: IconFlag,
     chip: "Teams & parties",
     iconWrap: "from-sky-500 to-teal-600 shadow-teal-500/25",
-    frame: "from-sky-200/45 via-white/70 to-teal-100/35",
+    frame: "from-sky-500/20 via-slate-800/80 to-teal-950/40",
   },
 ] as const;
 
@@ -79,10 +79,10 @@ export function ExperienceSection() {
     <TropicalFramedSection id="experience">
       <>
         <Reveal className="max-w-2xl">
-          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-teal-800/75 sm:text-xs">
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-teal-400/90 sm:text-xs">
             Plan your visit
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-[2.15rem] sm:leading-tight">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-[2.15rem] sm:leading-tight">
             Turn up the fun
           </h2>
           <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-teal-500 shadow-sm" />
@@ -101,7 +101,7 @@ export function ExperienceSection() {
                   <div
                     className={`rounded-[1.35rem] bg-gradient-to-br ${style.frame} p-[1px] shadow-[0_14px_44px_-18px_rgba(13,148,136,0.2)] transition-shadow duration-300 group-hover:shadow-[0_22px_56px_-20px_rgba(13,148,136,0.28)]`}
                   >
-                    <div className="relative flex h-full flex-col overflow-hidden rounded-[1.3rem] border border-white/90 bg-gradient-to-b from-white/98 via-white/95 to-emerald-50/20 px-7 pb-7 pt-8 backdrop-blur-sm">
+                    <div className="relative flex h-full flex-col overflow-hidden rounded-[1.3rem] border border-white/10 bg-gradient-to-b from-surface-elevated via-surface-elevated to-emerald-950/25 px-7 pb-7 pt-8 backdrop-blur-sm">
                       <div
                         className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-br from-amber-200/25 to-transparent blur-2xl"
                         aria-hidden
@@ -112,17 +112,17 @@ export function ExperienceSection() {
                         >
                           <Icon className="h-7 w-7" />
                         </div>
-                        <span className="rounded-full bg-slate-900/[0.04] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 ring-1 ring-slate-900/[0.06]">
+                        <span className="rounded-full bg-white/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 ring-1 ring-white/10">
                           {style.chip}
                         </span>
                       </div>
-                      <h3 className="relative mt-6 text-xl font-bold tracking-tight text-slate-900">{c.title}</h3>
+                      <h3 className="relative mt-6 text-xl font-bold tracking-tight text-ink">{c.title}</h3>
                       <p className="relative mt-3 flex-1 text-[15px] leading-relaxed text-muted">{c.body}</p>
                       <div
                         className="relative mt-6 h-px w-full bg-gradient-to-r from-transparent via-emerald-800/10 to-transparent"
                         aria-hidden
                       />
-                      <p className="relative mt-4 text-xs font-semibold text-teal-800/80">
+                      <p className="relative mt-4 text-xs font-semibold text-teal-400/90">
                         Two 18s · tropical theming · walk-ins welcome
                       </p>
                     </div>

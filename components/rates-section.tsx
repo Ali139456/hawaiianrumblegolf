@@ -31,36 +31,53 @@ function savingsVersusFullRound(compareAt: string, price: string) {
   return `Save $${save} vs. another full-price round`;
 }
 
+function StarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+    </svg>
+  );
+}
+
 function TicketRow({ item }: { item: TicketLine }) {
-  const base =
-    "relative flex h-full flex-col rounded-xl border px-5 py-5 text-left shadow-sm transition-colors sm:px-6 sm:py-6";
+  const isFeatured = Boolean(item.highlight);
 
-  const normal = "border-white/10 bg-slate-900/60";
-
-  const featured =
-    "border-amber-400/45 bg-gradient-to-br from-amber-950/55 via-slate-900/85 to-emerald-950/30 ring-2 ring-amber-400/35 shadow-[0_0_48px_rgba(251,191,36,0.12)] md:relative md:z-[2] md:scale-[1.03]";
+  const cardClass = [
+    "group relative flex h-full flex-col rounded-xl border border-white/10 bg-slate-900/60 px-5 py-5 text-left shadow-sm",
+    "transition-all duration-200 ease-out",
+    "hover:border-amber-400/80 hover:shadow-[0_12px_40px_rgba(249,115,22,0.18)] motion-safe:hover:-translate-y-0.5",
+    "sm:px-6 sm:py-6",
+    isFeatured
+      ? "bg-gradient-to-br from-amber-950/55 via-slate-900/90 to-emerald-950/25 md:relative md:z-[2] md:scale-[1.03]"
+      : "",
+  ].join(" ");
 
   const saleCopy = item.compareAtPrice ? savingsVersusFullRound(item.compareAtPrice, item.price) : null;
 
   return (
-    <div className={`${base} ${item.highlight ? featured : normal}`}>
-      {item.compareAtPrice ? (
+    <div className={cardClass}>
+      {isFeatured ? (
         <div
-          className="pointer-events-none absolute -right-px -top-px overflow-hidden rounded-tr-xl rounded-bl-2xl"
-          aria-hidden
+          className="-mx-1 -mt-1 mb-4 flex flex-wrap items-center justify-center gap-2 rounded-t-xl border-b border-amber-400/25 bg-gradient-to-r from-amber-500/25 via-orange-500/20 to-amber-500/25 px-3 py-2.5 sm:-mx-2 sm:px-4"
+          role="status"
         >
-          <div className="origin-top-right rotate-45 translate-x-8 translate-y-3 bg-gradient-to-r from-emerald-500 to-teal-600 px-10 py-1 text-center text-[10px] font-bold uppercase tracking-wider text-white shadow-md">
-            On sale
-          </div>
+          <span className="flex items-center gap-0.5 text-amber-300" aria-hidden>
+            <StarIcon className="h-4 w-4" />
+            <StarIcon className="h-3.5 w-3.5 opacity-80" />
+            <StarIcon className="h-4 w-4" />
+          </span>
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-100 sm:text-xs">
+            Most popular
+          </span>
+          {item.badge ? (
+            <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-200 ring-1 ring-amber-400/35">
+              {item.badge}
+            </span>
+          ) : null}
         </div>
       ) : null}
-      {item.badge && !item.compareAtPrice ? (
-        <span className="absolute right-3 top-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm sm:right-4 sm:top-4 sm:text-xs">
-          {item.badge}
-        </span>
-      ) : null}
-      <h3 className="pr-14 text-lg font-semibold tracking-tight text-white sm:text-xl">{item.label}</h3>
-      {item.badge && item.compareAtPrice ? (
+      <h3 className="text-lg font-semibold tracking-tight text-white sm:text-xl">{item.label}</h3>
+      {item.badge && !isFeatured ? (
         <span className="mt-2 inline-flex w-fit rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-200 ring-1 ring-amber-400/40">
           {item.badge}
         </span>
@@ -148,13 +165,13 @@ export function RatesSection({ site }: { site: SiteConfig }) {
     <TropicalFramedSection id="rates">
       <>
         <Reveal className="max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
             Rates that reward another round
           </h2>
           <p className="mt-3 text-lg text-muted">
             Walk-ins welcome all week. Stack a same-day 2nd game for huge value, or bring 20+ for group
             pricing. Ask at the window about{" "}
-            <span className="font-semibold text-slate-800">
+            <span className="font-semibold text-slate-200">
               military, seniors, Florida residents, and Disney &amp; Universal cast
             </span>{" "}
             specials.
@@ -217,17 +234,17 @@ export function RatesSection({ site }: { site: SiteConfig }) {
         <Reveal className="mt-10" delay={0.08}>
           <div
             id="deals"
-            className="rounded-3xl border border-amber-400/25 bg-gradient-to-br from-amber-50/90 via-white to-sky-50/80 p-6 shadow-sm sm:p-8"
+            className="rounded-3xl border border-amber-400/25 bg-gradient-to-br from-amber-950/40 via-surface-elevated to-sky-950/30 p-6 shadow-sm sm:p-8"
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-slate-900">Offers &amp; who saves</h3>
+                <h3 className="text-lg font-semibold text-ink">Offers &amp; who saves</h3>
                 <p className="mt-2 max-w-2xl text-muted">
                   We love locals, service members, and park crews. Ask about discounted rates when you check
                   in (ID may be required).
                 </p>
               </div>
-              <span className="shrink-0 rounded-full bg-amber-400/25 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-950">
+              <span className="shrink-0 rounded-full bg-amber-400/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-200">
                 At the clubhouse
               </span>
             </div>
@@ -235,7 +252,7 @@ export function RatesSection({ site }: { site: SiteConfig }) {
               {site.highlights.map((h) => (
                 <li
                   key={h}
-                  className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 text-sm text-slate-800"
+                  className="flex gap-3 rounded-2xl border border-white/10 bg-surface-muted/80 px-4 py-3 text-sm text-slate-200"
                 >
                   <span className="mt-0.5 text-amber-600" aria-hidden>
                     ✓
@@ -259,7 +276,7 @@ export function RatesSection({ site }: { site: SiteConfig }) {
               </Link>
               <Link
                 href="#testimonials"
-                className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/10"
               >
                 Read guest reviews
               </Link>

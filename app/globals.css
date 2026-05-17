@@ -1,22 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  /* Tropical / Hawaiian palette */
-  --surface: #ecf6f3;
-  --surface-elevated: #f8fcfb;
-  --ink: #0f172a;
-  --muted: #475569;
-  --brand: #f97316;
-  --brand-deep: #ea580c;
-  --ocean: #0ea5e9;
-  --ocean-deep: #0369a1;
-  --ring: color-mix(in oklab, var(--brand) 35%, white);
+  /* Dark tropical / Hawaiian night palette */
+  --surface: #0b1120;
+  --surface-elevated: #141c2e;
+  --surface-muted: #1a2438;
+  --ink: #f1f5f9;
+  --muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --brand: #fb923c;
+  --brand-deep: #f97316;
+  --ocean: #38bdf8;
+  --ocean-deep: #0ea5e9;
+  --ring: color-mix(in oklab, var(--brand) 45%, transparent);
 }
 
 @theme inline {
   --font-sans: var(--font-outfit);
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
+  --color-surface-muted: var(--surface-muted);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-brand: var(--brand);
@@ -27,21 +31,15 @@
 
 html {
   min-height: 100%;
-  /* Hawaiian-inspired: warm sky → lagoon mist → sand shore */
-  background-color: #dff0ec;
+  background-color: #060a12;
   background-image:
-    radial-gradient(ellipse 110% 50% at 50% -15%, rgba(251, 191, 36, 0.22) 0%, transparent 52%),
-    radial-gradient(ellipse 80% 45% at 0% 30%, rgba(56, 189, 248, 0.14) 0%, transparent 48%),
-    radial-gradient(ellipse 75% 40% at 100% 25%, rgba(52, 211, 153, 0.16) 0%, transparent 48%),
-    radial-gradient(ellipse 100% 55% at 50% 100%, rgba(13, 148, 136, 0.12) 0%, transparent 55%),
-    linear-gradient(
-      168deg,
-      #e8f4f1 0%,
-      var(--surface) 32%,
-      #e2f0ec 58%,
-      #d8ebe6 100%
-    );
+    radial-gradient(ellipse 110% 50% at 50% -15%, rgba(251, 146, 60, 0.12) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 45% at 0% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 48%),
+    radial-gradient(ellipse 75% 40% at 100% 25%, rgba(16, 185, 129, 0.08) 0%, transparent 48%),
+    radial-gradient(ellipse 100% 55% at 50% 100%, rgba(13, 148, 136, 0.1) 0%, transparent 55%),
+    linear-gradient(168deg, #0a0f1a 0%, var(--surface) 32%, #0d1524 58%, #080d16 100%);
   background-attachment: fixed;
+  color-scheme: dark;
 }
 
 body {
@@ -51,11 +49,10 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Softer tap feedback on phones (keeps the site feeling polished, not “web 1.0”). */
 @media (max-width: 767px) {
   a,
   button {
-    -webkit-tap-highlight-color: color-mix(in oklab, var(--brand) 20%, transparent);
+    -webkit-tap-highlight-color: color-mix(in oklab, var(--brand) 25%, transparent);
   }
 }
 
@@ -75,7 +72,23 @@ body {
   background: color-mix(in oklab, var(--brand) 35%, transparent);
 }
 
-/* --- Scroll reveal (no Framer): IntersectionObserver toggles classes --- */
+/* Feather section ambient blobs at top/bottom/sides — avoids hard rectangular cuts */
+/* Dark-theme Google Maps embed (standard iframe has no style API) */
+.contact-map-embed {
+  filter: invert(92%) hue-rotate(180deg) brightness(0.9) contrast(0.88) saturate(0.35);
+}
+
+.section-ambient-mask {
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%),
+    linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%),
+    linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .reveal-on-scroll {
     opacity: 0;
@@ -113,7 +126,6 @@ body {
     transform: translateY(-4px);
   }
 
-  /* Hero: load animations only (no scroll observer) */
   .hero-image-wrap {
     transform: scale(1.06);
     animation: hero-image-zoom 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -236,7 +248,6 @@ body {
   }
 }
 
-/* --- Marketing ticker (infinite horizontal scroll) --- */
 @keyframes marketing-marquee {
   from {
     transform: translate3d(0, 0, 0);
@@ -250,7 +261,6 @@ body {
   display: flex;
   width: max-content;
   will-change: transform;
-  /* Slow crawl so each line is easy to read (full loop still repeats seamlessly). */
   animation: marketing-marquee 150s linear infinite;
   animation-fill-mode: none;
 }

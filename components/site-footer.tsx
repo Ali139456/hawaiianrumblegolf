@@ -15,7 +15,7 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
   ] as const;
 
   return (
-    <footer className="border-t border-slate-200 bg-slate-950 text-slate-300">
+    <footer className="border-t border-white/10 bg-slate-950 text-slate-300">
       <div className="mx-auto max-w-6xl border-b border-white/10 px-4 py-10 sm:px-6">
         <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center sm:justify-between">
           <Link
