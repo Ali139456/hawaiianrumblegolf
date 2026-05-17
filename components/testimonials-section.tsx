@@ -107,7 +107,9 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
             <p className="mt-5 text-lg leading-relaxed text-muted">
               {useGoogle
                 ? "Fresh feedback from Google. Thank you for spending your evening with us under the lights."
-                : "Kind words from families, locals, and vacationers. Enable the Google Places API anytime to sync live reviews and photos."}
+                : data.status === "unconfigured"
+                  ? "Showing featured quotes. Add GOOGLE_PLACES_API_KEY in .env.local (local) or Vercel env vars (live site), then restart or redeploy."
+                  : "Kind words from families, locals, and vacationers."}
             </p>
             {summary}
           </Reveal>
@@ -152,8 +154,17 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
           </p>
         ) : data.status === "error" ? (
           <p className="mt-8 rounded-2xl border border-amber-200/90 bg-gradient-to-r from-amber-50/95 to-orange-50/80 px-4 py-3 text-sm text-amber-950 shadow-sm backdrop-blur-sm">
-            Live Google reviews could not be loaded (check your API key, billing, and Places API access).
-            Showing featured quotes instead.
+            Live Google reviews could not be loaded
+            {data.reason ? ` (${data.reason})` : ""}. Check your API key, billing, and that{" "}
+            <strong>Places API</strong> (classic) is enabled — not only Places API (New). Showing featured
+            quotes instead.
+          </p>
+        ) : data.status === "unconfigured" ? (
+          <p className="mt-8 rounded-2xl border border-white/10 bg-surface-muted/60 px-4 py-3 text-xs leading-relaxed text-muted backdrop-blur-sm">
+            Set <span className="font-semibold text-slate-300">GOOGLE_PLACES_API_KEY</span> in Vercel →
+            Environment Variables, then redeploy. Local dev: add the same to{" "}
+            <span className="font-semibold text-slate-300">.env.local</span> and restart{" "}
+            <span className="font-semibold text-slate-300">npm run dev</span>.
           </p>
         ) : null}
 

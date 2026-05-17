@@ -19,7 +19,7 @@ export type GoogleReviewsResult =
       userRatingsTotal: number | null;
     }
   | { status: "unconfigured" }
-  | { status: "error" };
+  | { status: "error"; reason: string };
 
 type PlaceDetailsReview = {
   author_name?: string;
@@ -49,7 +49,7 @@ type FindPlaceResponse = {
 async function findPlaceId(
   apiKey: string,
   venue: Pick<SiteConfig, "name" | "addressLine" | "cityStateZip">,
-): Promise<string | null> {
+): Promise<{ placeId: string | null; error: string | null }> {
   const input = `${venue.name}, ${venue.addressLine}, ${venue.cityStateZip}`;
   const url = new URL("https://maps.googleapis.com/maps/api/place/findplacefromtext/json");
   url.searchParams.set("input", input);
@@ -58,16 +58,22 @@ async function findPlaceId(
   url.searchParams.set("key", apiKey);
 
   const res = await fetch(url.toString(), { next: { revalidate: 86_400 } });
-  if (!res.ok) return null;
+  if (!res.ok) return { placeId: null, error: `HTTP ${res.status}` };
   const data = (await res.json()) as FindPlaceResponse;
-  if (data.status !== "OK" || !data.candidates?.length) return null;
-  return data.candidates[0]?.place_id ?? null;
+  if (data.status !== "OK" || !data.candidates?.length) {
+    const err = data.error_message ?? `Find Place: ${data.status}`;
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[google-reviews] findPlaceId:", err);
+    }
+    return { placeId: null, error: err };
+  }
+  return { placeId: data.candidates[0]?.place_id ?? null, error: null };
 }
 
 async function fetchPlaceDetails(
   placeId: string,
   apiKey: string,
-): Promise<PlaceDetailsResponse["result"] | null> {
+): Promise<{ result: PlaceDetailsResponse["result"] | null; error: string | null }> {
   const url = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   url.searchParams.set("place_id", placeId);
   url.searchParams.set(
@@ -77,12 +83,15 @@ async function fetchPlaceDetails(
   url.searchParams.set("key", apiKey);
 
   const res = await fetch(url.toString(), { next: { revalidate: 43_200 } });
-  if (!res.ok) return null;
+  if (!res.ok) return { result: null, error: `HTTP ${res.status}` };
   const data = (await res.json()) as PlaceDetailsResponse;
   if (data.status !== "OK" || !data.result) {
-    return null;
+    return {
+      result: null,
+      error: data.error_message ?? `Place Details: ${data.status}`,
+    };
   }
-  return data.result;
+  return { result: data.result, error: null };
 }
 
 function mapReviews(result: NonNullable<PlaceDetailsResponse["result"]>): GoogleReviewCard[] {
@@ -107,15 +116,22 @@ async function loadGoogleReviews(site: SiteConfig): Promise<GoogleReviewsResult>
   const sitePlaceId = site.googlePlaceId?.trim();
   let placeId = envPlaceId || sitePlaceId || null;
   if (!placeId) {
-    placeId = await findPlaceId(apiKey, site);
-  }
-  if (!placeId) {
-    return { status: "error" };
+    const found = await findPlaceId(apiKey, site);
+    placeId = found.placeId;
+    if (!placeId) {
+      return {
+        status: "error",
+        reason: found.error ?? "Could not find this business on Google Places.",
+      };
+    }
   }
 
-  const result = await fetchPlaceDetails(placeId, apiKey);
+  const { result, error } = await fetchPlaceDetails(placeId, apiKey);
   if (!result) {
-    return { status: "error" };
+    return {
+      status: "error",
+      reason: error ?? "Google Places did not return review data.",
+    };
   }
 
   return {
@@ -130,7 +146,9 @@ async function loadGoogleReviews(site: SiteConfig): Promise<GoogleReviewsResult>
 /** Cached server-side; requires GOOGLE_PLACES_API_KEY (and optionally GOOGLE_PLACE_ID). */
 export async function getGoogleReviewData(site: SiteConfig): Promise<GoogleReviewsResult> {
   const keyParts = [
-    "hawaiian-rumble-google-reviews-v2",
+    "hawaiian-rumble-google-reviews-v3",
+    process.env.GOOGLE_PLACES_API_KEY ? "key-set" : "key-missing",
+    process.env.GOOGLE_PLACE_ID?.trim() ?? "",
     site.googlePlaceId ?? "",
     site.name,
     site.addressLine,
