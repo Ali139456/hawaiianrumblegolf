@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const live = await getLiveSite();
   return {
     title: "Deals & specials",
-    description: `Current offers and ways to save at ${live.name} in Orlando, FL. Group rates, replay pricing, and window discounts.`,
+    description: `Current offers and ways to save at ${live.name} in Orlando, FL. Group rates, same-day another-18 pricing, and window discounts.`,
   };
 }
 
@@ -19,7 +19,7 @@ export default async function DealsPage() {
   const { dealsPage, hours, phone, phoneTel } = site;
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-full min-w-0 flex-col overflow-x-clip">
       <StickySiteChrome site={site} />
       <main className="flex-1">
         <section className="border-b border-white/5 bg-surface px-4 py-16 sm:px-6 sm:py-20">

@@ -63,7 +63,7 @@ export function ExperienceSection() {
   const cards = [
     {
       title: "Family outings",
-      body: "Colorful holes, playful obstacles, and room to laugh together. Perfect after the parks. Play twice the same day and save on round two.",
+      body: "Colorful holes, playful obstacles, and room to laugh together. Perfect after the parks. Play another 18 the same day and save.",
     },
     {
       title: "Date night",

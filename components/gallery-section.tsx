@@ -5,7 +5,7 @@ import { media } from "@/lib/site";
 
 export function GallerySection() {
   return (
-    <section id="gallery" className="scroll-mt-24 border-y border-white/5 bg-surface-muted px-4 py-20 sm:px-6">
+    <section id="gallery" className="scroll-mt-24 overflow-x-clip border-y border-white/5 bg-surface-muted px-4 py-20 sm:px-6">
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">

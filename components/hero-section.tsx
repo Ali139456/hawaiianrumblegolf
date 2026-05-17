@@ -6,7 +6,7 @@ import { media, type SiteConfig } from "@/lib/site";
 
 const stats = [
   { k: "Courses", v: "Two 18-hole adventures" },
-  { k: "Replay deal", v: "2nd game $9.95 same day" },
+  { k: "Play again", v: "Another 18 · $9.95 same day" },
   { k: "Vibe", v: "Music & tropical fun" },
 ] as const;
 
@@ -43,7 +43,7 @@ export function HeroSection({ site }: { site: SiteConfig }) {
           </p>
           <div className="hero-line hero-line-delay-2 mt-6 flex flex-col items-stretch gap-3 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-start sm:gap-2.5">
             <span className="inline-flex w-full items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-950/50 px-3 py-2 text-center text-[11px] font-semibold leading-snug text-emerald-100 shadow-[0_6px_18px_rgba(0,0,0,0.18)] backdrop-blur-md sm:w-auto sm:justify-start sm:rounded-full sm:px-3 sm:py-1 sm:text-xs">
-              Same-day 2nd game $9.95 · was $15.95
+              Another 18 holes same day $9.95 · was $15.95
             </span>
             <span className="inline-flex w-full items-center justify-center rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-center text-[11px] font-semibold leading-snug text-amber-50 shadow-[0_6px_18px_rgba(0,0,0,0.12)] backdrop-blur-md sm:w-auto sm:justify-start sm:rounded-full sm:px-3 sm:py-1 sm:text-xs">
               ~1 mile from Disney &amp; Disney Springs
@@ -54,7 +54,7 @@ export function HeroSection({ site }: { site: SiteConfig }) {
           </h1>
           <p className="hero-line hero-line-delay-4 mt-6 max-w-xl text-center text-sm leading-relaxed text-slate-200/95 sm:mt-5 sm:text-left sm:text-base lg:text-lg">
             Two full 18-hole courses with lights, music, and tropical energy. Walk in, play one or double up
-            and save on round two the same day.
+            and save when you play another 18 the same day.
           </p>
           <div className="hero-line hero-line-delay-5 mx-auto mt-10 flex w-full max-w-md flex-col gap-3.5 sm:mx-0 sm:mt-8 sm:max-w-none">
             <div className="flex w-full flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
@@ -62,13 +62,13 @@ export function HeroSection({ site }: { site: SiteConfig }) {
                 href={homeHash(HOME_SECTIONS.rates)}
                 className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 text-sm font-bold text-slate-950 shadow-[0_8px_28px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition hover:brightness-105 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:text-sm sm:font-semibold sm:ring-1"
               >
-                See rates &amp; replay deal
+                See rates &amp; play-again deal
               </Link>
               <Link
                 href={site.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-white/25 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:border sm:px-6 sm:text-sm"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-white/50 bg-slate-950/90 px-5 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(0,0,0,0.45)] backdrop-blur-sm transition hover:border-white/70 hover:bg-slate-900 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:text-sm"
               >
                 Get directions
               </Link>

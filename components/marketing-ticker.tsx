@@ -8,14 +8,14 @@ export function MarketingTicker({ site }: { site: SiteConfig }) {
 
   return (
     <div
-      className="relative z-[60] border-b border-amber-400/25 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+      className="relative z-[60] w-full max-w-full overflow-x-clip border-b border-amber-400/25 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
       role="region"
       aria-label="Highlights and promotions"
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-slate-950 to-transparent sm:w-16" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-slate-950 to-transparent sm:w-16" />
 
-      <div className="overflow-hidden py-3 sm:py-3">
+      <div className="marketing-marquee-viewport py-3 sm:py-3">
         <div className="marketing-marquee-track flex">
           <ul className="flex shrink-0 list-none items-center gap-0 pr-10">
             {lines.map((text) => (

@@ -3,7 +3,7 @@ import type { SiteConfig } from "@/lib/site";
 
 export function InfoStrip({ site }: { site: SiteConfig }) {
   return (
-    <section className="border-y border-amber-400/20 bg-gradient-to-r from-amber-950/50 via-slate-900/80 to-sky-950/40">
+    <section className="overflow-x-clip border-y border-amber-400/20 bg-gradient-to-r from-amber-950/50 via-slate-900/80 to-sky-950/40">
       <Reveal className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 sm:px-6 sm:py-7">
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center shadow-sm backdrop-blur-sm sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-left sm:shadow-none">

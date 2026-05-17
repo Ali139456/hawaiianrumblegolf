@@ -88,7 +88,7 @@ function TicketRow({ item }: { item: TicketLine }) {
       {item.compareAtPrice ? (
         <>
           <div className="mt-5 space-y-2">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300/95">Same-day replay</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300/95">Play again · same day</p>
             <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
               <span className="flex items-baseline gap-1 text-slate-500">
                 <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Was</span>
@@ -109,7 +109,7 @@ function TicketRow({ item }: { item: TicketLine }) {
               <p className="text-sm font-semibold text-emerald-300/90">{saleCopy}</p>
             ) : null}
             <p className="text-xs leading-relaxed text-slate-500">
-              Play your first round at the regular rate, then lock in replay pricing for round two. Perfect
+              Play your first round at the regular rate, then lock in pricing for another 18 the same day. Perfect
               for families doubling up on fun.
             </p>
           </div>
@@ -158,7 +158,7 @@ export function RatesSection({ site }: { site: SiteConfig }) {
 
   const columnHeadings = [
     { title: rates.leftColumnTitle, sub: rates.leftColumnSub },
-    { title: "Replay deal", sub: "Same day · per person" },
+    { title: "Another 18 holes", sub: "Same day · per person" },
     { title: rates.rightColumnTitle, sub: rates.rightColumnSub },
   ] as const;
 
@@ -170,7 +170,7 @@ export function RatesSection({ site }: { site: SiteConfig }) {
             Rates that reward another round
           </h2>
           <p className="mt-3 text-lg text-muted">
-            Walk-ins welcome all week. Stack a same-day 2nd game for huge value, or bring 20+ for group
+            Walk-ins welcome all week. Play another 18 the same day for huge value, or bring 20+ for group
             pricing. Ask at the window about{" "}
             <span className="font-semibold text-slate-200">
               military, seniors, Florida residents, and Disney &amp; Universal cast
@@ -186,7 +186,7 @@ export function RatesSection({ site }: { site: SiteConfig }) {
                 {rates.title}
               </p>
               <p className="mx-auto mt-3 max-w-lg text-sm text-slate-400">
-                1st game · 2nd game (same day) · Group rate · simple pricing, more mini golf.
+                1st game · another 18 (same day) · Group rate · simple pricing, more mini golf.
               </p>
             </div>
 

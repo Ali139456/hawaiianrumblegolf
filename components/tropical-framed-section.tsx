@@ -51,7 +51,7 @@ export function TropicalFramedSection({ id, children, className = "", innerClass
   return (
     <section
       id={id}
-      className={`scroll-mt-24 relative isolate px-4 py-20 sm:px-6 ${className}`}
+      className={`scroll-mt-24 relative isolate overflow-x-clip px-4 py-20 sm:px-6 ${className}`}
     >
       <div
         className="pointer-events-none absolute inset-0 -z-30 bg-[linear-gradient(168deg,#0d1524_0%,#0b1220_42%,#0a101c_100%)]"

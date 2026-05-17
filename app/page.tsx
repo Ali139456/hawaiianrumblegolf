@@ -16,7 +16,7 @@ export default async function Home() {
   const site = await getLiveSite();
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-full min-w-0 flex-col overflow-x-clip">
       <StickySiteChrome site={site} />
       <main className="flex-1">
         <HeroSection site={site} />

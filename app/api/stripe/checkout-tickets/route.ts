@@ -42,8 +42,23 @@ function isValidVisitDate(iso: string, minIso: string) {
   return t >= minT;
 }
 
+const VISIT_TIME_PATTERN = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+
+function isValidVisitTime(value: string) {
+  return VISIT_TIME_PATTERN.test(value);
+}
+
+function formatVisitTimeForStripe(value: string) {
+  const [h, m] = value.split(":").map((x) => Number.parseInt(x, 10));
+  if (Number.isNaN(h) || Number.isNaN(m)) return value;
+  const d = new Date();
+  d.setHours(h, m, 0, 0);
+  return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+}
+
 type Body = {
   visitDate?: unknown;
+  visitTime?: unknown;
   players?: unknown;
   first?: unknown;
   replay?: unknown;
@@ -66,6 +81,7 @@ export async function POST(req: Request) {
   }
 
   const visitDate = typeof body.visitDate === "string" ? body.visitDate.trim() : "";
+  const visitTime = typeof body.visitTime === "string" ? body.visitTime.trim() : "";
   const playersRaw = body.players;
   const playersNum =
     typeof playersRaw === "number" && Number.isInteger(playersRaw)
@@ -84,10 +100,17 @@ export async function POST(req: Request) {
   if (!visitDate) {
     return NextResponse.json({ error: "Choose a visit date." }, { status: 400 });
   }
+  if (!visitTime) {
+    return NextResponse.json({ error: "Choose an arrival time." }, { status: 400 });
+  }
+  if (!isValidVisitTime(visitTime)) {
+    return NextResponse.json({ error: "Choose a valid arrival time." }, { status: 400 });
+  }
   const minIso = todayIsoLocal();
   if (!isValidVisitDate(visitDate, minIso)) {
     return NextResponse.json({ error: "Visit date must be today or later." }, { status: 400 });
   }
+  const visitWhen = `${visitDate} · ${formatVisitTimeForStripe(visitTime)}`;
   if (!Number.isFinite(playersNum) || playersNum < 1 || playersNum > MAX_PLAYERS) {
     return NextResponse.json({ error: "Select a valid guest count." }, { status: 400 });
   }
@@ -103,7 +126,7 @@ export async function POST(req: Request) {
         unit_amount: toCents(unit),
         product_data: {
           name: `${site.rates.leftColumn[0].label} · ${playersNum} guest${playersNum === 1 ? "" : "s"}`,
-          description: `Visit ${visitDate}. Posted rate estimate — specials finalize at the window.`,
+          description: `Visit ${visitWhen}. Posted rate estimate — specials finalize at the window.`,
         },
       },
     });
@@ -118,7 +141,7 @@ export async function POST(req: Request) {
         unit_amount: toCents(unit),
         product_data: {
           name: `${site.rates.leftColumn[1].label} · ${playersNum} guest${playersNum === 1 ? "" : "s"}`,
-          description: `Visit ${visitDate}. Same-day replay after a paid first round.`,
+          description: `Visit ${visitWhen}. Another 18 holes same day after a paid first round.`,
         },
       },
     });
@@ -134,7 +157,7 @@ export async function POST(req: Request) {
         unit_amount: toCents(unit * head),
         product_data: {
           name: `${site.rates.rightColumn[0].label} · ${head} guest${head === 1 ? "" : "s"}`,
-          description: `Visit ${visitDate}. Group estimate (min. ${GROUP_MIN_HEAD} guests for posted per-person rate).`,
+          description: `Visit ${visitWhen}. Group estimate (min. ${GROUP_MIN_HEAD} guests for posted per-person rate).`,
         },
       },
     });
@@ -167,6 +190,7 @@ export async function POST(req: Request) {
       cancel_url: `${origin}/checkout/cancel`,
       metadata: {
         visit_date: visitDate,
+        visit_time: visitTime,
         players: String(playersNum),
         bundle,
         source: "tickets_modal",

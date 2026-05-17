@@ -31,6 +31,8 @@
 
 html {
   min-height: 100%;
+  overflow-x: clip;
+  max-width: 100%;
   background-color: #060a12;
   background-image:
     radial-gradient(ellipse 110% 50% at 50% -15%, rgba(251, 146, 60, 0.12) 0%, transparent 52%),
@@ -44,6 +46,8 @@ html {
 
 body {
   min-height: 100%;
+  overflow-x: clip;
+  max-width: 100%;
   background: transparent;
   color: var(--ink);
   font-family: var(--font-sans), system-ui, sans-serif;
@@ -255,6 +259,13 @@ body {
   to {
     transform: translate3d(-50%, 0, 0);
   }
+}
+
+.marketing-marquee-viewport {
+  overflow: hidden;
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
 }
 
 .marketing-marquee-track {

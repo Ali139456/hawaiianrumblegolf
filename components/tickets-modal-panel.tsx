@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { homeHash } from "@/lib/site-paths";
@@ -41,9 +42,9 @@ const CARD_ON: Record<PricedOfferingId, string> = {
 };
 
 const CATEGORY_TONE: Record<PricedOfferingId, string> = {
-  first: "bg-sky-600/15 text-sky-900 ring-1 ring-sky-500/25",
-  replay: "bg-amber-500/15 text-amber-950 ring-1 ring-amber-500/30",
-  group: "bg-violet-600/15 text-violet-950 ring-1 ring-violet-500/25",
+  first: "bg-sky-600 text-white shadow-sm ring-1 ring-sky-300/60",
+  replay: "bg-amber-600 text-white shadow-sm ring-1 ring-amber-300/60",
+  group: "bg-violet-600 text-white shadow-sm ring-1 ring-violet-300/60",
 };
 
 function todayIsoDate() {
@@ -71,6 +72,36 @@ function formatVisitDate(iso: string) {
   });
 }
 
+function formatTime12h(h24: number, minute: number) {
+  const d = new Date();
+  d.setHours(h24, minute, 0, 0);
+  return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+/** 30-minute arrival windows during open hours (late slots Fri & Sat only). */
+function buildVisitTimeSlots() {
+  const slots: { value: string; label: string }[] = [];
+  for (let total = 9 * 60; total <= 23 * 60 + 30; total += 30) {
+    const h = Math.floor(total / 60);
+    const m = total % 60;
+    const value = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    const label = formatTime12h(h, m);
+    const friSatOnly = total > 22 * 60;
+    slots.push({
+      value,
+      label: friSatOnly ? `${label} (Fri & Sat)` : label,
+    });
+  }
+  return slots;
+}
+
+const VISIT_TIME_SLOTS = buildVisitTimeSlots();
+
+function formatVisitTime(value: string) {
+  const slot = VISIT_TIME_SLOTS.find((s) => s.value === value);
+  return slot?.label ?? value;
+}
+
 function buildOfferings(): OfferingDef[] {
   const r = site.rates;
   const first = r.leftColumn[0];
@@ -87,8 +118,8 @@ function buildOfferings(): OfferingDef[] {
     },
     {
       id: "replay",
-      title: `${replay.label} · same-day replay`,
-      tagline: "Per person · after a paid first round",
+      title: `${replay.label} · same day`,
+      tagline: "Per person · play again after a paid first round",
       detail: replay.detail,
       priceLine: `From $${replay.price}`,
       unitUsd: parseUsd(replay.price),
@@ -107,7 +138,7 @@ function buildOfferings(): OfferingDef[] {
 
 function categoryLabel(id: PricedOfferingId) {
   if (id === "first") return "Single";
-  if (id === "replay") return "Replay";
+  if (id === "replay") return "Play again";
   return "Group";
 }
 
@@ -118,6 +149,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
   const offerings = useMemo(() => buildOfferings(), []);
 
   const [visitDate, setVisitDate] = useState("");
+  const [visitTime, setVisitTime] = useState("");
   const [players, setPlayers] = useState("");
   const [selected, setSelected] = useState<Record<PricedOfferingId, boolean>>({
     first: false,
@@ -189,6 +221,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
   useEffect(() => {
     if (!open) {
       setVisitDate("");
+      setVisitTime("");
       setPlayers("");
       setSelected({ first: false, replay: false, group: false });
       setFieldError(null);
@@ -211,6 +244,10 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       setFieldError("Choose a visit date.");
       return;
     }
+    if (!visitTime) {
+      setFieldError("Choose an arrival time.");
+      return;
+    }
     if (!players) {
       setFieldError("Select how many players.");
       return;
@@ -223,6 +260,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           visitDate,
+          visitTime,
           players: playersNum,
           first: selected.first,
           replay: selected.replay,
@@ -277,16 +315,23 @@ export function TicketsModalPanel({ open, onClose }: Props) {
 
         <div className="relative flex shrink-0 items-start justify-between gap-4 border-b border-white/10 bg-surface-muted/80 px-5 pb-5 pt-7 backdrop-blur-sm sm:px-8 sm:pb-6 sm:pt-8">
           <div className="min-w-0">
-            <div className="flex items-center gap-2.5">
-              <span className="h-8 w-1 rounded-full bg-gradient-to-b from-teal-500 to-emerald-600 shadow-sm" aria-hidden />
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-teal-400/90">Hawaiian Rumble</p>
+            <div className="flex items-center">
+              <Image
+                src="/logo.png"
+                alt="Hawaiian Rumble Adventure Golf"
+                width={240}
+                height={62}
+                className="h-10 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)] sm:h-11"
+                priority
+              />
             </div>
             <h2 id={titleId} className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
               Buy tickets
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
               Stack <span className="font-semibold text-slate-200">ticket types</span>, then set your{" "}
-              <span className="font-semibold text-slate-200">date</span> and{" "}
+              <span className="font-semibold text-slate-200">date</span>,{" "}
+              <span className="font-semibold text-slate-200">time</span>, and{" "}
               <span className="font-semibold text-slate-200">guests</span>. Pay securely on{" "}
               <span className="font-semibold text-slate-200">Stripe Checkout</span> (cards, Apple Pay, Google Pay).
             </p>
@@ -305,19 +350,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 sm:px-8 sm:py-7">
-          <div className="relative overflow-hidden rounded-2xl border border-teal-500/25 bg-gradient-to-br from-teal-950/50 via-surface-muted to-sky-950/40 px-4 py-4 shadow-sm sm:px-5 sm:py-4">
-            <div
-              className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-teal-400/15 blur-2xl"
-              aria-hidden
-            />
-            <p className="relative text-sm font-bold text-teal-200">Stripe · cards, Apple Pay &amp; Google Pay</p>
-            <p className="relative mt-1.5 text-sm leading-relaxed text-teal-100/80">
-              Each option below becomes a line item. Your guests get the same polished checkout experience they expect
-              from modern booking sites.
-            </p>
-          </div>
-
-          <div className="mt-8">
+          <div>
             <div className="flex items-center gap-3">
               <span className="h-7 w-1 rounded-full bg-gradient-to-b from-amber-400 to-orange-500" aria-hidden />
               <div>
@@ -326,7 +359,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
               </div>
             </div>
             <p className="mt-2 pl-4 text-sm text-muted sm:pl-5">
-              Tap cards to add or remove — combine first round, replay, and group in one basket.
+              Tap cards to add or remove — combine first round, another 18, and group in one basket.
             </p>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {offerings.map((o) => {
@@ -345,25 +378,25 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                       className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition ${
                         on
                           ? "bg-teal-600 text-white shadow-md shadow-teal-600/25"
-                          : "border-2 border-dashed border-slate-600/80 bg-white/5 text-transparent group-hover:border-teal-400/50"
+                          : "border-2 border-dashed border-white/35 bg-white/10 text-transparent group-hover:border-teal-400/70"
                       }`}
                       aria-hidden
                     >
                       {on ? "✓" : ""}
                     </span>
                     <span
-                      className={`inline-flex w-fit rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${CATEGORY_TONE[o.id]}`}
+                      className={`inline-flex w-fit rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.1em] ${CATEGORY_TONE[o.id]}`}
                     >
                       {categoryLabel(o.id)}
                     </span>
-                    <span className="mt-3 pr-10 text-base font-bold leading-snug text-ink">{o.title}</span>
-                    <span className="mt-1 text-xs font-medium text-slate-600">{o.tagline}</span>
-                    <p className="mt-2 line-clamp-2 flex-1 text-xs leading-relaxed text-slate-600">{o.detail}</p>
-                    <p className="mt-3 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-lg font-extrabold tracking-tight text-transparent">
+                    <span className="mt-3 pr-10 text-lg font-bold leading-snug text-white">{o.title}</span>
+                    <span className="mt-1.5 text-sm font-medium text-white/95">{o.tagline}</span>
+                    <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-white/85">{o.detail}</p>
+                    <p className="mt-3 bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
                       {o.priceLine}
                     </p>
                     {o.minGuests ? (
-                      <p className="mt-1 text-[11px] font-medium text-slate-500">Min. {o.minGuests} guests for posted rate</p>
+                      <p className="mt-1 text-xs font-medium text-white/75">Min. {o.minGuests} guests for posted rate</p>
                     ) : null}
                   </button>
                 );
@@ -379,7 +412,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                 <p className="text-base font-bold text-ink">When &amp; how many?</p>
               </div>
             </div>
-            <div className="mt-4 grid grid-cols-1 gap-4 rounded-2xl border border-white/10 bg-surface-muted/60 p-4 shadow-inner sm:grid-cols-2 sm:p-5">
+            <div className="mt-4 grid grid-cols-1 gap-4 rounded-2xl border border-white/10 bg-surface-muted/60 p-4 shadow-inner sm:grid-cols-2 lg:grid-cols-3 sm:p-5">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Visit date</span>
                 <input
@@ -394,6 +427,24 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                 />
               </label>
               <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Time of day</span>
+                <select
+                  value={visitTime}
+                  onChange={(e) => {
+                    setVisitTime(e.target.value);
+                    setFieldError(null);
+                  }}
+                  className={inputClass}
+                >
+                  <option value="">Arrival time?</option>
+                  {VISIT_TIME_SLOTS.map((slot) => (
+                    <option key={slot.value} value={slot.value}>
+                      {slot.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block sm:col-span-2 lg:col-span-1">
                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Guests</span>
                 <select
                   value={players}
@@ -449,6 +500,10 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                   <span className="text-slate-400">{visitDate ? formatVisitDate(visitDate) : "—"}</span>
                 </li>
                 <li className="flex flex-wrap gap-x-2">
+                  <span className="font-semibold text-ink">Arrival</span>
+                  <span className="text-slate-400">{visitTime ? formatVisitTime(visitTime) : "—"}</span>
+                </li>
+                <li className="flex flex-wrap gap-x-2">
                   <span className="font-semibold text-ink">Guests</span>
                   <span className="text-slate-400">
                     {players ? `${players} ${players === "1" ? "guest" : "guests"}` : "—"}
@@ -500,7 +555,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                   )}
                 </p>
                 <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
-                  Ballpark only — window specials and IDs finalize in Stripe. Replay needs a paid first round the same
+                  Ballpark only — window specials and IDs finalize in Stripe. Another 18 needs a paid first round the same
                   day.
                 </p>
               </div>
@@ -536,3 +591,4 @@ export function TicketsModalPanel({ open, onClose }: Props) {
     </div>
   );
 }
+

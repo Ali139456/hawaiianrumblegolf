@@ -5,7 +5,7 @@ import type { SiteConfig } from "@/lib/site";
 /** Ticker + nav, sticky together (reuse on home, /deals, and future pages). */
 export function StickySiteChrome({ site }: { site: SiteConfig }) {
   return (
-    <div className="sticky top-0 z-50">
+    <div className="sticky top-0 z-50 w-full max-w-full overflow-x-clip">
       <MarketingTicker site={site} />
       <SiteHeader />
     </div>

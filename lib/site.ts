@@ -28,14 +28,14 @@ export const site = {
   texasMovieShopUrl: "https://www.texasmovieshop.com/",
   coordinates: { lat: 28.3679948, lng: -81.5016732 },
   hours: {
-    week: "Sunday – Thursday | 10:00 AM – 10:00 PM",
-    weekend: "Friday & Saturday | 10:00 AM – 11:30 PM",
+    week: "Sunday – Thursday | 9:00 AM – 10:00 PM",
+    weekend: "Friday & Saturday | 9:00 AM – 11:30 PM",
   },
   /** Scrolling marketing ticker (see `MarketingTicker`). */
   tickerLines: [
-    "Open 7 days · Sun–Thu 10AM–10PM · Fri–Sat 10AM–11:30PM",
-    "Same-day 2nd game $9.95 · replay pricing after your first paid round",
-    "1st round $15.95 per person · stack a second 18 the same day and save",
+    "Open 7 days · Sun–Thu 9AM–10PM · Fri–Sat 9AM–11:30PM",
+    "Another 18 holes same day $9.95 · after your first paid round",
+    "1st round $15.95 per person · play again the same day and save",
     "Two full 18-hole courses · lights · music · island energy",
     "~1 mile from Walt Disney World & Disney Springs",
     "Military · seniors · Florida residents · Disney & Universal cast · discounts at the window",
@@ -57,8 +57,8 @@ export const site = {
         pricePrefix: "",
       },
       {
-        label: "2nd game",
-        detail: "Same day only · come back for another 18 right after your first round",
+        label: "Another 18 holes",
+        detail: "Same day only · play again right after your first round",
         price: "9.95",
         /** Shown struck-through next to the sale price (matches 1st-game rate). */
         compareAtPrice: "15.95",
@@ -77,7 +77,7 @@ export const site = {
       },
     ],
     footnotes: [
-      "2nd-game rate is for an additional round the same day as a paid 1st game, like a built-in replay deal.",
+      "Another-18 rate is for a second round the same day as a paid first game — our built-in play-again deal.",
       "Single and group rates are per person unless noted.",
       "Contact us for more information about group outings and parties.",
       "Prices may change; confirm current rates at the clubhouse.",
@@ -98,9 +98,9 @@ export const site = {
     footnote: "Prices and offers can change. Confirm at the clubhouse or call before you visit.",
     cards: [
       {
-        title: "Same-day 2nd game",
+        title: "Another 18 holes (same day)",
         badge: "Best value",
-        body: "Play your first round at the regular rate, then add another 18 the same day at replay pricing.",
+        body: "Play your first round at the regular rate, then play again the same day at our discounted second-round price.",
         price: "$9.95",
         compareAt: "$15.95",
         hint: "Per person · same calendar day",

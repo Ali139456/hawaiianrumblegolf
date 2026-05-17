@@ -4,7 +4,7 @@ import { media } from "@/lib/site";
 
 export function AmenitiesSection() {
   return (
-    <section className="border-y border-white/5 bg-surface px-4 py-20 sm:px-6">
+    <section className="overflow-x-clip border-y border-white/5 bg-surface px-4 py-20 sm:px-6">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
         <Reveal className="overflow-hidden rounded-3xl border border-white/10 shadow-lg shadow-black/30" y={20}>
           <Image

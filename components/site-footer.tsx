@@ -26,42 +26,21 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
 
   return (
     <footer className="border-t border-white/10 bg-slate-950 text-slate-300">
-      <div className="mx-auto max-w-6xl border-b border-white/10 px-4 py-10 sm:px-6">
-        <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href="/"
-            className="flex shrink-0 items-center rounded-xl ring-white/0 transition hover:ring-2 hover:ring-amber-400/25"
-          >
-            <Image
-              src="/logo.png"
-              alt="Hawaiian Rumble Adventure Golf"
-              width={260}
-              height={68}
-              className="h-14 w-auto sm:h-16"
-            />
-          </Link>
-          <nav className="flex flex-wrap items-center justify-center gap-3" aria-label="Reviews and social">
-            {reviewLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={item.label}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/15 transition hover:bg-white/12 hover:ring-amber-400/30"
-              >
-                <span style={{ color: `#${item.icon.hex}` }} className="inline-flex">
-                  <SimpleBrandIcon icon={item.icon} className="h-6 w-6" />
-                </span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      <StaggerRoot className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-3">
+      <StaggerRoot className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 sm:py-14 lg:grid-cols-3">
         <MotionItem index={0}>
           <div>
+            <Link
+              href="/"
+              className="mb-8 inline-flex rounded-xl ring-white/0 transition hover:ring-2 hover:ring-amber-400/25"
+            >
+              <Image
+                src="/logo.png"
+                alt="Hawaiian Rumble Adventure Golf"
+                width={260}
+                height={68}
+                className="h-12 w-auto sm:h-14"
+              />
+            </Link>
             <p className="text-sm font-semibold uppercase tracking-widest text-amber-300/90">Visit us</p>
             <p className="mt-3 text-lg font-medium text-white">{site.name}</p>
             <ul className="mt-3 space-y-4 text-sm leading-relaxed">
@@ -121,7 +100,23 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
         <MotionItem index={2}>
           <div>
             <p className="text-sm font-semibold uppercase tracking-widest text-amber-300/90">Connect</p>
-            <ul className="mt-3 flex flex-col gap-3 text-sm">
+            <nav className="mt-4 flex flex-wrap gap-3" aria-label="Reviews and social">
+              {reviewLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.label}
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/15 transition hover:bg-white/12 hover:ring-amber-400/30"
+                >
+                  <span style={{ color: `#${item.icon.hex}` }} className="inline-flex">
+                    <SimpleBrandIcon icon={item.icon} className="h-6 w-6" />
+                  </span>
+                </Link>
+              ))}
+            </nav>
+            <ul className="mt-5 flex flex-col gap-3 text-sm">
               <li className="flex gap-2">
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/20">
                   <MapPinIcon className="h-4 w-4" />
