@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { homeHash } from "@/lib/site-paths";
 import { site } from "@/lib/site";
 
 type Props = {
@@ -418,7 +419,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
             <p className="mt-2 text-sm leading-relaxed text-slate-300">
               Need a tailored package or invoice?{" "}
               <Link
-                href="/#contact"
+                href={homeHash("contact")}
                 className="font-semibold text-violet-300 underline decoration-violet-400/40 underline-offset-2 transition hover:text-violet-200"
                 onClick={onClose}
               >

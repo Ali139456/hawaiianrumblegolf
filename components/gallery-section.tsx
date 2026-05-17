@@ -28,6 +28,7 @@ export function GallerySection() {
                 src={src}
                 alt={`Hawaiian Rumble mini golf scene ${i + 1}`}
                 fill
+                priority={i === 0}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover"
               />

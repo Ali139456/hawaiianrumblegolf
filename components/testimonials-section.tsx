@@ -5,6 +5,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
 import { TestimonialsReviewsBlock } from "@/components/testimonials-reviews-block";
 import { getGoogleReviewData, googleWriteReviewUrl, type GoogleReviewCard } from "@/lib/google-reviews";
+import { HOME_SECTIONS, homeHash } from "@/lib/site-paths";
 import type { SiteConfig } from "@/lib/site";
 
 export function TestimonialsSectionFallback() {
@@ -115,7 +116,7 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
             y={10}
           >
             <Link
-              href="/#contact"
+              href={homeHash(HOME_SECTIONS.contact)}
               className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-ink shadow-sm transition hover:border-amber-400/60 hover:bg-white/10 hover:shadow-md"
             >
               Give us feedback

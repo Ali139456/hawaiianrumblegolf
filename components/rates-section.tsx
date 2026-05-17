@@ -3,6 +3,7 @@ import { BuyTicketsButton } from "@/components/buy-tickets-button";
 import { Reveal } from "@/components/motion/reveal";
 import { MotionItem, StaggerRoot } from "@/components/motion/stagger";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
+import { homeHash, normalizeSiteHref } from "@/lib/site-paths";
 import type { SiteConfig } from "@/lib/site";
 
 type TicketLine = {
@@ -136,7 +137,7 @@ function TicketRow({ item }: { item: TicketLine }) {
             <BuyTicketsButton variant="ratesPrimary" />
             {item.cta ? (
               <Link
-                href={item.cta.href}
+                href={normalizeSiteHref(item.cta.href)}
                 className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
               >
                 {item.cta.label}
@@ -269,13 +270,13 @@ export function RatesSection({ site }: { site: SiteConfig }) {
                 View deals page
               </Link>
               <Link
-                href="#contact"
+                href={homeHash("contact")}
                 className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
               >
                 Plan a group outing
               </Link>
               <Link
-                href="#testimonials"
+                href={homeHash("testimonials")}
                 className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/10"
               >
                 Read guest reviews

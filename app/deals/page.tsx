@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { StickySiteChrome } from "@/components/sticky-site-chrome";
+import { HOME_SECTIONS, homeHash } from "@/lib/site-paths";
 import { getLiveSite } from "@/lib/site-live";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,13 +73,13 @@ export default async function DealsPage() {
               <p className="mt-4 text-xs text-muted">{dealsPage.footnote}</p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <Link
-                  href="/#rates"
+                  href={homeHash(HOME_SECTIONS.rates)}
                   className="inline-flex rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
                 >
                   Full rate breakdown
                 </Link>
                 <Link
-                  href="/#contact"
+                  href={homeHash(HOME_SECTIONS.contact)}
                   className="inline-flex rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/10"
                 >
                   Contact for groups

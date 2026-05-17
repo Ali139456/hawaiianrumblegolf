@@ -5,7 +5,17 @@ import { MapPinIcon, PhoneIcon, StorefrontIcon } from "@/components/icons/contac
 import { SimpleBrandIcon } from "@/components/icons/simple-brand-icon";
 import { Reveal } from "@/components/motion/reveal";
 import { MotionItem, StaggerRoot } from "@/components/motion/stagger";
+import { HOME_SECTIONS, homeHash } from "@/lib/site-paths";
 import type { SiteConfig } from "@/lib/site";
+
+const footerNav = [
+  { href: homeHash(HOME_SECTIONS.rates), label: "Rates" },
+  { href: "/deals", label: "Deals" },
+  { href: homeHash(HOME_SECTIONS.gallery), label: "Gallery" },
+  { href: homeHash(HOME_SECTIONS.testimonials), label: "Reviews" },
+  { href: homeHash(HOME_SECTIONS.texasMovieShop), label: "Texas Movie Shop" },
+  { href: homeHash(HOME_SECTIONS.contact), label: "Contact" },
+] as const;
 
 export function SiteFooter({ site }: { site: SiteConfig }) {
   const reviewLinks = [
@@ -86,7 +96,19 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
         </MotionItem>
         <MotionItem index={1}>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-amber-300/90">Hours</p>
+            <p className="text-sm font-semibold uppercase tracking-widest text-amber-300/90">Explore</p>
+            <nav className="mt-3" aria-label="Site sections">
+              <ul className="flex flex-col gap-2 text-sm">
+                {footerNav.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className="text-slate-300 transition hover:text-white">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <p className="mt-6 text-sm font-semibold uppercase tracking-widest text-amber-300/90">Hours</p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>{site.hours.week}</li>
               <li>{site.hours.weekend}</li>

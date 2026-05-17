@@ -17,9 +17,9 @@ export const site = {
   yelpUrl: "https://www.yelp.com/biz/hawaiian-rumble-adventure-golf-orlando-2",
   tripAdvisorUrl:
     "https://www.tripadvisor.com/Attraction_Review-g34515-d2312525-Reviews-Hawaiian_Rumble_Adventure_Golf-Orlando_Florida.html",
-  /** Opens this listing’s Google Maps reviews tab (same place as `mapsUrl`). */
+  /** Opens Google Maps with the reviews tab for this listing (same place as `mapsUrl`). */
   googleMapsReviewsUrl:
-    "https://www.google.com/maps/place/Hawaiian+Rumble+Adventure+Golf/reviews/@28.368194,-81.502057,1086m/data=!3m1!1e3!4m6!3m5!1s0x88dd80319742cd39:0x81207cfe8bee0590!8m2!3d28.3679948!4d-81.5016732!16s%2Fg%2F1tfbtpp_",
+    "https://www.google.com/maps/place/Hawaiian+Rumble+Adventure+Golf/@28.3679948,-81.5016732,17z/data=!4m8!3m7!1s0x88dd80319742cd39:0x81207cfe8bee0590!8m2!3d28.3679948!4d-81.5016732!9m1!1b1!16s%2Fg%2F1tfbtpp_",
   /**
    * Optional. Prefer setting `GOOGLE_PLACE_ID` in the environment for production.
    * Used with the Places API and the “Write a review” shortcut when live reviews load.
@@ -73,7 +73,7 @@ export const site = {
         detail: "Minimum of 20 people for group rates",
         price: "12.95",
         pricePrefix: "",
-        cta: { href: "#contact", label: "Contact us for more information" },
+        cta: { href: "/#contact", label: "Contact us for more information" },
       },
     ],
     footnotes: [
@@ -188,9 +188,9 @@ export type SiteConfig = typeof site;
 export const media = {
   hero: "https://static.wixstatic.com/media/b4b2ad_1b2aef21b5934f028c97725582917b77~mv2.jpg/v1/fit/w_1920,h_1282,q_90,enc_avif,quality_auto/b4b2ad_1b2aef21b5934f028c97725582917b77~mv2.jpg",
   gallery: [
+    "https://static.wixstatic.com/media/b4b2ad_e2795a9668504df99a8ca524a0aff253~mv2.jpg/v1/fit/w_1200,h_800,q_90,enc_avif,quality_auto/b4b2ad_e2795a9668504df99a8ca524a0aff253~mv2.jpg",
     "https://static.wixstatic.com/media/b4b2ad_a8df8592f79543b2bfdf302e0a5ccdc4~mv2.jpg/v1/fit/w_1200,h_800,q_90,enc_avif,quality_auto/b4b2ad_a8df8592f79543b2bfdf302e0a5ccdc4~mv2.jpg",
     "https://static.wixstatic.com/media/b4b2ad_b019c9b2c93047dbb432feda0edb376f~mv2.jpg/v1/fit/w_1200,h_800,q_90,enc_avif,quality_auto/b4b2ad_b019c9b2c93047dbb432feda0edb376f~mv2.jpg",
-    "https://static.wixstatic.com/media/b4b2ad_e2795a9668504df99a8ca524a0aff253~mv2.jpg/v1/fit/w_1200,h_800,q_90,enc_avif,quality_auto/b4b2ad_e2795a9668504df99a8ca524a0aff253~mv2.jpg",
     "https://static.wixstatic.com/media/b4b2ad_5473dfb89f204e359fc91a2e3748c51b~mv2.jpg/v1/fit/w_960,h_1440,q_90,enc_avif,quality_auto/b4b2ad_5473dfb89f204e359fc91a2e3748c51b~mv2.jpg",
     "https://static.wixstatic.com/media/b4b2ad_cbc238c0f38c4e84b5b4f8d193f46a08~mv2.jpg/v1/fit/w_1200,h_800,q_90,enc_avif,quality_auto/b4b2ad_cbc238c0f38c4e84b5b4f8d193f46a08~mv2.jpg",
     "https://static.wixstatic.com/media/b4b2ad_d3caed0732a34d7095996b2092e4e8e8~mv2.jpg/v1/fit/w_960,h_1000,q_90,enc_avif,quality_auto/b4b2ad_d3caed0732a34d7095996b2092e4e8e8~mv2.jpg",

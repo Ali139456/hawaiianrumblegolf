@@ -5,16 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { BuyTicketsButton } from "@/components/buy-tickets-button";
+import { HOME_SECTIONS, homeHash } from "@/lib/site-paths";
 
 type NavItem = { href: string; label: string };
 
 const nav: NavItem[] = [
-  { href: "/#rates", label: "Rates" },
+  { href: homeHash(HOME_SECTIONS.rates), label: "Rates" },
   { href: "/deals", label: "Deals" },
-  { href: "/#gallery", label: "Gallery" },
-  { href: "/#testimonials", label: "Reviews" },
-  { href: "/#texas-movie-shop", label: "Texas Movie Shop" },
-  { href: "/#contact", label: "Contact" },
+  { href: homeHash(HOME_SECTIONS.gallery), label: "Gallery" },
+  { href: homeHash(HOME_SECTIONS.testimonials), label: "Reviews" },
+  { href: homeHash(HOME_SECTIONS.texasMovieShop), label: "Texas Movie Shop" },
+  { href: homeHash(HOME_SECTIONS.contact), label: "Contact" },
 ];
 
 export function SiteHeader() {
@@ -88,7 +89,7 @@ export function SiteHeader() {
             <BuyTicketsButton variant="header" />
             <div className="transition-transform duration-200 ease-out hover:-translate-y-px active:scale-[0.97]">
               <Link
-                href={siteHref("rates")}
+                href={homeHash(HOME_SECTIONS.rates)}
                 className="group/cta relative inline-flex overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(249,115,22,0.35)] ring-1 ring-white/25 transition-[filter] hover:brightness-110"
                 aria-label="Come join us: see rates and plan your visit"
               >
@@ -158,7 +159,7 @@ export function SiteHeader() {
             </div>
             <BuyTicketsButton variant="navMobile" onNavigate={() => setOpen(false)} />
             <Link
-              href={siteHref("rates")}
+              href={homeHash(HOME_SECTIONS.rates)}
               className="mt-2 flex min-h-[3.25rem] items-center justify-center rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-4 text-base font-bold text-slate-950 shadow-lg shadow-orange-500/35 ring-2 ring-white/25 transition active:scale-[0.98] hover:brightness-105"
               onClick={() => setOpen(false)}
             >
@@ -170,8 +171,4 @@ export function SiteHeader() {
       ) : null}
     </header>
   );
-}
-
-function siteHref(hash: string) {
-  return `/#${hash}`;
 }
