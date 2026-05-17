@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
-import { site } from "@/lib/site";
 import { getAppOrigin } from "@/lib/app-origin";
+import { site } from "@/lib/site";
 import { getStripeServer } from "@/lib/stripe-server";
+import { slotAllowedOnDate, VISIT_TIME_SLOTS } from "@/lib/visit-time-slots";
+import {
+  getVisitSlotCapacity,
+  getVisitSlotUsage,
+  reserveVisitSlot,
+} from "@/lib/visit-slot-capacity";
 
 const PAYMENT_METHOD_TYPES = ["card", "link"] as const;
 
@@ -121,6 +127,35 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Select a valid guest count." }, { status: 400 });
   }
 
+  const slotDef = VISIT_TIME_SLOTS.find((s) => s.value === visitTime);
+  if (!slotDef) {
+    return NextResponse.json({ error: "Choose a valid arrival time." }, { status: 400 });
+  }
+  if (!slotAllowedOnDate(slotDef, visitDate)) {
+    return NextResponse.json(
+      { error: "That arrival time is only available on Friday and Saturday." },
+      { status: 400 },
+    );
+  }
+
+  const slotUsage = await getVisitSlotUsage(visitDate, visitTime);
+  if (slotUsage?.full) {
+    return NextResponse.json(
+      {
+        error: `${formatVisitTimeForStripe(visitTime)} on ${visitDate} is full (${slotUsage.capacity} guests). Pick another time.`,
+      },
+      { status: 409 },
+    );
+  }
+  if (slotUsage && playersNum > slotUsage.remaining) {
+    return NextResponse.json(
+      {
+        error: `Only ${slotUsage.remaining} spot${slotUsage.remaining === 1 ? "" : "s"} left at ${formatVisitTimeForStripe(visitTime)}. Lower guest count or pick another time.`,
+      },
+      { status: 409 },
+    );
+  }
+
   const line_items: TicketLineItem[] = [];
 
   if (first) {
@@ -205,6 +240,28 @@ export async function POST(req: Request) {
 
     if (!session.url) {
       return NextResponse.json({ error: "Checkout did not return a URL." }, { status: 500 });
+    }
+
+    const reserved = await reserveVisitSlot(visitDate, visitTime, playersNum, session.id);
+    if (!reserved.ok) {
+      try {
+        await stripe.checkout.sessions.expire(session.id);
+      } catch {
+        /* session may already be unusable */
+      }
+      const cap = reserved.capacity ?? getVisitSlotCapacity();
+      if (reserved.reason === "full") {
+        return NextResponse.json(
+          {
+            error: `${formatVisitTimeForStripe(visitTime)} on ${visitDate} is full (${cap} guests). Pick another time.`,
+          },
+          { status: 409 },
+        );
+      }
+      return NextResponse.json(
+        { error: "Could not reserve that arrival time. Try again or pick another slot." },
+        { status: 409 },
+      );
     }
 
     return NextResponse.json({ url: session.url });

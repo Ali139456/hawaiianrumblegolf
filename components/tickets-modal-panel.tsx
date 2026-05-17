@@ -5,6 +5,16 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { homeHash } from "@/lib/site-paths";
 import { site } from "@/lib/site";
+import { formatVisitTimeLabel, VISIT_TIME_SLOTS } from "@/lib/visit-time-slots";
+
+type SlotAvailability = {
+  value: string;
+  label: string;
+  booked: number;
+  capacity: number;
+  remaining: number;
+  full: boolean;
+};
 
 type Props = {
   open: boolean;
@@ -72,34 +82,8 @@ function formatVisitDate(iso: string) {
   });
 }
 
-function formatTime12h(h24: number, minute: number) {
-  const d = new Date();
-  d.setHours(h24, minute, 0, 0);
-  return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-}
-
-/** 30-minute arrival windows during open hours (late slots Fri & Sat only). */
-function buildVisitTimeSlots() {
-  const slots: { value: string; label: string }[] = [];
-  for (let total = 9 * 60; total <= 23 * 60; total += 30) {
-    const h = Math.floor(total / 60);
-    const m = total % 60;
-    const value = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-    const label = formatTime12h(h, m);
-    const friSatOnly = total > 22 * 60;
-    slots.push({
-      value,
-      label: friSatOnly ? `${label} (Fri & Sat)` : label,
-    });
-  }
-  return slots;
-}
-
-const VISIT_TIME_SLOTS = buildVisitTimeSlots();
-
 function formatVisitTime(value: string) {
-  const slot = VISIT_TIME_SLOTS.find((s) => s.value === value);
-  return slot?.label ?? value;
+  return formatVisitTimeLabel(value);
 }
 
 function buildOfferings(): OfferingDef[] {
@@ -158,8 +142,44 @@ export function TicketsModalPanel({ open, onClose }: Props) {
   });
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [checkoutPending, setCheckoutPending] = useState(false);
+  const [slotAvailability, setSlotAvailability] = useState<SlotAvailability[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
 
   const playersNum = players ? Number.parseInt(players, 10) : 0;
+
+  const selectedSlot = slotAvailability.find((s) => s.value === visitTime);
+
+  useEffect(() => {
+    if (!visitDate) {
+      setSlotAvailability([]);
+      return;
+    }
+
+    let cancelled = false;
+    setSlotsLoading(true);
+    void fetch(`/api/visit-slots/availability?date=${encodeURIComponent(visitDate)}`)
+      .then((res) => res.json())
+      .then((data: { slots?: SlotAvailability[] }) => {
+        if (cancelled) return;
+        const slots = data.slots ?? [];
+        setSlotAvailability(slots);
+        setVisitTime((prev) => {
+          if (!prev) return prev;
+          const match = slots.find((s) => s.value === prev);
+          return match?.full ? "" : prev;
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setSlotAvailability([]);
+      })
+      .finally(() => {
+        if (!cancelled) setSlotsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [visitDate]);
 
   const lineItems = useMemo(() => {
     const rows: { label: string; amount: number; note?: string }[] = [];
@@ -226,6 +246,8 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       setSelected({ first: false, replay: false, group: false });
       setFieldError(null);
       setCheckoutPending(false);
+      setSlotAvailability([]);
+      setSlotsLoading(false);
     }
   }, [open]);
 
@@ -265,6 +287,16 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       setFieldError("Select how many players.");
       return;
     }
+    if (selectedSlot?.full) {
+      setFieldError(`${formatVisitTime(visitTime)} is full for this date. Pick another arrival time.`);
+      return;
+    }
+    if (selectedSlot && playersNum > selectedSlot.remaining) {
+      setFieldError(
+        `Only ${selectedSlot.remaining} spot${selectedSlot.remaining === 1 ? "" : "s"} left at ${formatVisitTime(visitTime)}. Lower guest count or pick another time.`,
+      );
+      return;
+    }
 
     setCheckoutPending(true);
     try {
@@ -283,6 +315,14 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok) {
         setFieldError(data.error ?? "Checkout could not start. Try again or call us.");
+        if (res.status === 409 && visitDate) {
+          void fetch(`/api/visit-slots/availability?date=${encodeURIComponent(visitDate)}`)
+            .then((r) => r.json())
+            .then((payload: { slots?: SlotAvailability[] }) => {
+              setSlotAvailability(payload.slots ?? []);
+            })
+            .catch(() => undefined);
+        }
         return;
       }
       if (data.url) {
@@ -457,19 +497,44 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Time of day</span>
                 <select
                   value={visitTime}
+                  disabled={!visitDate || slotsLoading}
                   onChange={(e) => {
                     setVisitTime(e.target.value);
                     setFieldError(null);
                   }}
                   className={inputClass}
                 >
-                  <option value="">Arrival time?</option>
-                  {VISIT_TIME_SLOTS.map((slot) => (
-                    <option key={slot.value} value={slot.value}>
-                      {slot.label}
+                  <option value="">
+                    {!visitDate
+                      ? "Pick a date first"
+                      : slotsLoading
+                        ? "Loading times…"
+                        : "Arrival time?"}
+                  </option>
+                  {(slotAvailability.length > 0
+                    ? slotAvailability
+                    : VISIT_TIME_SLOTS.map((s) => ({
+                        ...s,
+                        booked: 0,
+                        capacity: 100,
+                        remaining: 100,
+                        full: false,
+                      }))
+                  ).map((slot) => (
+                    <option key={slot.value} value={slot.value} disabled={slot.full}>
+                      {slot.full
+                        ? `${slot.label} — Full`
+                        : slot.remaining < slot.capacity
+                          ? `${slot.label} (${slot.remaining} spots left)`
+                          : slot.label}
                     </option>
                   ))}
                 </select>
+                {visitDate && selectedSlot && !selectedSlot.full ? (
+                  <p className="mt-1.5 text-xs text-slate-400">
+                    {selectedSlot.remaining} of {selectedSlot.capacity} guest spots left at this time.
+                  </p>
+                ) : null}
               </label>
               <label className="block sm:col-span-2 lg:col-span-1">
                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Guests</span>
