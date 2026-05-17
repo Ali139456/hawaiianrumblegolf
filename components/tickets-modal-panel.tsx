@@ -230,7 +230,16 @@ export function TicketsModalPanel({ open, onClose }: Props) {
   }, [open]);
 
   function toggleOffering(id: PricedOfferingId) {
-    setSelected((s) => ({ ...s, [id]: !s[id] }));
+    setSelected((s) => {
+      if (id === "replay" && !s.replay) {
+        // Another 18 same day requires a 1st game in the same order.
+        return { ...s, first: true, replay: true };
+      }
+      if (id === "first" && s.first) {
+        return { ...s, first: false, replay: false };
+      }
+      return { ...s, [id]: !s[id] };
+    });
     setFieldError(null);
   }
 
@@ -238,6 +247,10 @@ export function TicketsModalPanel({ open, onClose }: Props) {
     setFieldError(null);
     if (!hasPricedSelection) {
       setFieldError("Select at least one ticket type (you can choose several).");
+      return;
+    }
+    if (selected.replay && !selected.first) {
+      setFieldError("Another 18 holes must be booked with a 1st game in the same order.");
       return;
     }
     if (!visitDate) {
@@ -359,17 +372,26 @@ export function TicketsModalPanel({ open, onClose }: Props) {
               </div>
             </div>
             <p className="mt-2 pl-4 text-sm text-muted sm:pl-5">
-              Tap cards to add or remove — combine first round, another 18, and group in one basket.
+              Tap cards to add or remove.{" "}
+              <span className="font-medium text-slate-300">
+                Another 18 holes requires a 1st game in the same basket.
+              </span>
             </p>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {offerings.map((o) => {
                 const on = selected[o.id];
+                const replayNeedsFirst = o.id === "replay" && !selected.first && !on;
                 return (
                   <button
                     key={o.id}
                     type="button"
                     onClick={() => toggleOffering(o.id)}
                     aria-pressed={on}
+                    title={
+                      replayNeedsFirst
+                        ? "Adds 1st game and another 18 — play-again is same day after a paid first round"
+                        : undefined
+                    }
                     className={`touch-manipulation group relative flex min-h-[158px] flex-col rounded-2xl border-2 p-4 text-left transition motion-safe:duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.99] ${
                       on ? CARD_ON[o.id] : CARD_IDLE[o.id]
                     }`}
@@ -392,6 +414,11 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                     <span className="mt-3 pr-10 text-lg font-bold leading-snug text-white">{o.title}</span>
                     <span className="mt-1.5 text-sm font-medium text-white/95">{o.tagline}</span>
                     <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-white/85">{o.detail}</p>
+                    {o.id === "replay" && !on ? (
+                      <p className="mt-2 text-xs font-semibold text-amber-200/90">
+                        Includes 1st game when selected · same-day only
+                      </p>
+                    ) : null}
                     <p className="mt-3 bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
                       {o.priceLine}
                     </p>

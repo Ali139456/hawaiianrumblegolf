@@ -97,6 +97,12 @@ export async function POST(req: Request) {
   if (!first && !replay && !group) {
     return NextResponse.json({ error: "Select at least one ticket type." }, { status: 400 });
   }
+  if (replay && !first) {
+    return NextResponse.json(
+      { error: "Another 18 holes must be booked with a 1st game in the same order." },
+      { status: 400 },
+    );
+  }
   if (!visitDate) {
     return NextResponse.json({ error: "Choose a visit date." }, { status: 400 });
   }
