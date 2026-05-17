@@ -29,11 +29,11 @@ export const site = {
   coordinates: { lat: 28.3679948, lng: -81.5016732 },
   hours: {
     week: "Sunday – Thursday | 9:00 AM – 10:00 PM",
-    weekend: "Friday & Saturday | 9:00 AM – 11:30 PM",
+    weekend: "Friday & Saturday | 9:00 AM – 11:00 PM",
   },
   /** Scrolling marketing ticker (see `MarketingTicker`). */
   tickerLines: [
-    "Open 7 days · Sun–Thu 9AM–10PM · Fri–Sat 9AM–11:30PM",
+    "Open 7 days · Sun–Thu 9AM–10PM · Fri–Sat 9AM–11PM",
     "Another 18 holes same day $9.95 · after your first paid round",
     "1st round $15.95 per person · play again the same day and save",
     "Two full 18-hole courses · lights · music · island energy",

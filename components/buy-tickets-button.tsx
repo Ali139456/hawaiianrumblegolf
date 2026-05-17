@@ -64,7 +64,7 @@ export function BuyTicketsButton({ variant, onNavigate }: Props) {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md transition hover:border-amber-400/45 hover:bg-white/15 active:scale-[0.97] sm:px-5"
+      className="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-r from-teal-400 via-teal-500 to-emerald-500 px-4 text-sm font-bold text-white shadow-[0_4px_20px_rgba(20,184,166,0.4)] ring-2 ring-teal-300/35 transition hover:brightness-110 active:scale-[0.97] sm:px-5"
     >
       Buy tickets
     </button>

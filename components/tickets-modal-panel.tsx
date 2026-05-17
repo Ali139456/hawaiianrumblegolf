@@ -81,7 +81,7 @@ function formatTime12h(h24: number, minute: number) {
 /** 30-minute arrival windows during open hours (late slots Fri & Sat only). */
 function buildVisitTimeSlots() {
   const slots: { value: string; label: string }[] = [];
-  for (let total = 9 * 60; total <= 23 * 60 + 30; total += 30) {
+  for (let total = 9 * 60; total <= 23 * 60; total += 30) {
     const h = Math.floor(total / 60);
     const m = total % 60;
     const value = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;

@@ -128,7 +128,7 @@ export function ContactSection({ site }: { site: SiteConfig }) {
             href={site.mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 text-sm font-semibold text-ink transition hover:bg-white/10"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-gradient-to-r from-sky-400 via-cyan-500 to-teal-500 px-5 text-sm font-bold text-white shadow-[0_4px_20px_rgba(14,165,233,0.4)] ring-2 ring-sky-300/35 transition hover:brightness-110 active:scale-[0.98]"
           >
             Get directions
           </Link>

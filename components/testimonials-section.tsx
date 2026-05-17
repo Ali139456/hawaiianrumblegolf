@@ -1,5 +1,6 @@
 import { siGoogle } from "simple-icons";
 import Link from "next/link";
+import { GoogleGLogo } from "@/components/icons/google-g-logo";
 import { SimpleBrandIcon } from "@/components/icons/simple-brand-icon";
 import { Reveal } from "@/components/motion/reveal";
 import { TropicalFramedSection } from "@/components/tropical-framed-section";
@@ -117,7 +118,7 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
           >
             <Link
               href={homeHash(HOME_SECTIONS.contact)}
-              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-ink shadow-sm transition hover:border-amber-400/60 hover:bg-white/10 hover:shadow-md"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/35 ring-2 ring-amber-300/40 transition hover:brightness-110 hover:shadow-orange-500/50 active:scale-[0.98]"
             >
               Give us feedback
             </Link>
@@ -125,10 +126,10 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
               href={reviewHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/25 ring-1 ring-white/15 transition hover:brightness-110"
+              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-white px-5 py-3 text-sm font-bold text-slate-900 shadow-lg shadow-black/20 ring-2 ring-blue-200/80 transition hover:bg-slate-50 hover:shadow-xl active:scale-[0.98]"
             >
-              <span style={{ color: `#${siGoogle.hex}` }} className="inline-flex">
-                <SimpleBrandIcon icon={siGoogle} className="h-4 w-4" />
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-200/80">
+                <GoogleGLogo className="h-[18px] w-[18px]" />
               </span>
               Review on Google
             </a>
@@ -136,8 +137,9 @@ export async function TestimonialsSection({ site }: { site: SiteConfig }) {
               href={site.googleMapsReviewsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-sm font-semibold text-teal-400 underline decoration-teal-400/30 underline-offset-[5px] transition hover:decoration-teal-300 sm:text-left"
+              className="inline-flex items-center justify-center gap-1.5 text-center text-sm font-semibold text-teal-300 underline decoration-teal-400/50 underline-offset-[5px] transition hover:text-teal-200 hover:decoration-teal-300 sm:justify-start"
             >
+              <GoogleGLogo className="h-4 w-4 shrink-0" />
               Read all reviews on Google →
             </a>
           </Reveal>

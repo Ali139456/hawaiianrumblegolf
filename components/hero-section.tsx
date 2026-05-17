@@ -1,7 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
-import { BuyTicketsButton } from "@/components/buy-tickets-button";
-import { HOME_SECTIONS, homeHash } from "@/lib/site-paths";
 import { media, type SiteConfig } from "@/lib/site";
 
 const stats = [
@@ -56,25 +53,6 @@ export function HeroSection({ site }: { site: SiteConfig }) {
             Two full 18-hole courses with lights, music, and tropical energy. Walk in, play one or double up
             and save when you play another 18 the same day.
           </p>
-          <div className="hero-line hero-line-delay-5 mx-auto mt-10 flex w-full max-w-md flex-col gap-3.5 sm:mx-0 sm:mt-8 sm:max-w-none">
-            <div className="flex w-full flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-              <Link
-                href={homeHash(HOME_SECTIONS.rates)}
-                className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 text-sm font-bold text-slate-950 shadow-[0_8px_28px_rgba(249,115,22,0.35)] ring-2 ring-white/20 transition hover:brightness-105 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:text-sm sm:font-semibold sm:ring-1"
-              >
-                See rates &amp; play-again deal
-              </Link>
-              <Link
-                href={site.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-white/50 bg-slate-950/90 px-5 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(0,0,0,0.45)] backdrop-blur-sm transition hover:border-white/70 hover:bg-slate-900 active:scale-[0.98] sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:text-sm"
-              >
-                Get directions
-              </Link>
-              <BuyTicketsButton variant="hero" />
-            </div>
-          </div>
         </div>
 
         <dl className="grid w-full max-w-md grid-cols-2 gap-4 self-center sm:max-w-none sm:grid-cols-3 sm:gap-3 sm:self-stretch">
