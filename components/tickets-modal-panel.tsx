@@ -3,18 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { todayIsoLocal } from "@/lib/booking-dates";
+import { parseUsd } from "@/lib/pricing";
 import { homeHash } from "@/lib/site-paths";
 import { site } from "@/lib/site";
-import { formatVisitTimeLabel, VISIT_TIME_SLOTS } from "@/lib/visit-time-slots";
-
-type SlotAvailability = {
-  value: string;
-  label: string;
-  booked: number;
-  capacity: number;
-  remaining: number;
-  full: boolean;
-};
+import {
+  formatVisitTimeLabel,
+  slotAllowedOnDate,
+  VISIT_TIME_SLOTS,
+} from "@/lib/visit-time-slots";
 
 type Props = {
   open: boolean;
@@ -57,19 +54,6 @@ const CATEGORY_TONE: Record<PricedOfferingId, string> = {
   group: "bg-violet-600 text-white shadow-sm ring-1 ring-violet-300/60",
 };
 
-function todayIsoDate() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function parseUsd(s: string) {
-  const n = Number.parseFloat(String(s).replace(/[^0-9.]/g, ""));
-  return Number.isNaN(n) ? 0 : n;
-}
-
 function formatVisitDate(iso: string) {
   if (!iso) return "";
   const d = new Date(`${iso}T12:00:00`);
@@ -80,10 +64,6 @@ function formatVisitDate(iso: string) {
     day: "numeric",
     year: "numeric",
   });
-}
-
-function formatVisitTime(value: string) {
-  return formatVisitTimeLabel(value);
 }
 
 function buildOfferings(): OfferingDef[] {
@@ -129,11 +109,18 @@ function categoryLabel(id: PricedOfferingId) {
 export function TicketsModalPanel({ open, onClose }: Props) {
   const titleId = useId();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const minDate = useMemo(() => todayIsoDate(), []);
+  const minDate = useMemo(() => todayIsoLocal(), []);
   const offerings = useMemo(() => buildOfferings(), []);
 
   const [visitDate, setVisitDate] = useState("");
   const [visitTime, setVisitTime] = useState("");
+  const visitTimeSlots = useMemo(
+    () =>
+      visitDate
+        ? VISIT_TIME_SLOTS.filter((slot) => slotAllowedOnDate(slot, visitDate))
+        : VISIT_TIME_SLOTS,
+    [visitDate],
+  );
   const [players, setPlayers] = useState("");
   const [selected, setSelected] = useState<Record<PricedOfferingId, boolean>>({
     first: false,
@@ -142,44 +129,8 @@ export function TicketsModalPanel({ open, onClose }: Props) {
   });
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [checkoutPending, setCheckoutPending] = useState(false);
-  const [slotAvailability, setSlotAvailability] = useState<SlotAvailability[]>([]);
-  const [slotsLoading, setSlotsLoading] = useState(false);
 
   const playersNum = players ? Number.parseInt(players, 10) : 0;
-
-  const selectedSlot = slotAvailability.find((s) => s.value === visitTime);
-
-  useEffect(() => {
-    if (!visitDate) {
-      setSlotAvailability([]);
-      return;
-    }
-
-    let cancelled = false;
-    setSlotsLoading(true);
-    void fetch(`/api/visit-slots/availability?date=${encodeURIComponent(visitDate)}`)
-      .then((res) => res.json())
-      .then((data: { slots?: SlotAvailability[] }) => {
-        if (cancelled) return;
-        const slots = data.slots ?? [];
-        setSlotAvailability(slots);
-        setVisitTime((prev) => {
-          if (!prev) return prev;
-          const match = slots.find((s) => s.value === prev);
-          return match?.full ? "" : prev;
-        });
-      })
-      .catch(() => {
-        if (!cancelled) setSlotAvailability([]);
-      })
-      .finally(() => {
-        if (!cancelled) setSlotsLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [visitDate]);
 
   const lineItems = useMemo(() => {
     const rows: { label: string; amount: number; note?: string }[] = [];
@@ -246,8 +197,6 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       setSelected({ first: false, replay: false, group: false });
       setFieldError(null);
       setCheckoutPending(false);
-      setSlotAvailability([]);
-      setSlotsLoading(false);
     }
   }, [open]);
 
@@ -287,16 +236,6 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       setFieldError("Select how many players.");
       return;
     }
-    if (selectedSlot?.full) {
-      setFieldError(`${formatVisitTime(visitTime)} is full for this date. Pick another arrival time.`);
-      return;
-    }
-    if (selectedSlot && playersNum > selectedSlot.remaining) {
-      setFieldError(
-        `Only ${selectedSlot.remaining} spot${selectedSlot.remaining === 1 ? "" : "s"} left at ${formatVisitTime(visitTime)}. Lower guest count or pick another time.`,
-      );
-      return;
-    }
 
     setCheckoutPending(true);
     try {
@@ -315,14 +254,6 @@ export function TicketsModalPanel({ open, onClose }: Props) {
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok) {
         setFieldError(data.error ?? "Checkout could not start. Try again or call us.");
-        if (res.status === 409 && visitDate) {
-          void fetch(`/api/visit-slots/availability?date=${encodeURIComponent(visitDate)}`)
-            .then((r) => r.json())
-            .then((payload: { slots?: SlotAvailability[] }) => {
-              setSlotAvailability(payload.slots ?? []);
-            })
-            .catch(() => undefined);
-        }
         return;
       }
       if (data.url) {
@@ -487,8 +418,13 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                   min={minDate}
                   value={visitDate}
                   onChange={(e) => {
-                    setVisitDate(e.target.value);
+                    const next = e.target.value;
+                    setVisitDate(next);
                     setFieldError(null);
+                    if (visitTime) {
+                      const slot = VISIT_TIME_SLOTS.find((s) => s.value === visitTime);
+                      if (slot && !slotAllowedOnDate(slot, next)) setVisitTime("");
+                    }
                   }}
                   className={inputClass}
                 />
@@ -497,44 +433,19 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Time of day</span>
                 <select
                   value={visitTime}
-                  disabled={!visitDate || slotsLoading}
                   onChange={(e) => {
                     setVisitTime(e.target.value);
                     setFieldError(null);
                   }}
                   className={inputClass}
                 >
-                  <option value="">
-                    {!visitDate
-                      ? "Pick a date first"
-                      : slotsLoading
-                        ? "Loading times…"
-                        : "Arrival time?"}
-                  </option>
-                  {(slotAvailability.length > 0
-                    ? slotAvailability
-                    : VISIT_TIME_SLOTS.map((s) => ({
-                        ...s,
-                        booked: 0,
-                        capacity: 100,
-                        remaining: 100,
-                        full: false,
-                      }))
-                  ).map((slot) => (
-                    <option key={slot.value} value={slot.value} disabled={slot.full}>
-                      {slot.full
-                        ? `${slot.label} — Full`
-                        : slot.remaining < slot.capacity
-                          ? `${slot.label} (${slot.remaining} spots left)`
-                          : slot.label}
+                  <option value="">Arrival time?</option>
+                  {visitTimeSlots.map((slot) => (
+                    <option key={slot.value} value={slot.value}>
+                      {slot.label}
                     </option>
                   ))}
                 </select>
-                {visitDate && selectedSlot && !selectedSlot.full ? (
-                  <p className="mt-1.5 text-xs text-slate-400">
-                    {selectedSlot.remaining} of {selectedSlot.capacity} guest spots left at this time.
-                  </p>
-                ) : null}
               </label>
               <label className="block sm:col-span-2 lg:col-span-1">
                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted">Guests</span>
@@ -593,7 +504,7 @@ export function TicketsModalPanel({ open, onClose }: Props) {
                 </li>
                 <li className="flex flex-wrap gap-x-2">
                   <span className="font-semibold text-ink">Arrival</span>
-                  <span className="text-slate-400">{visitTime ? formatVisitTime(visitTime) : "—"}</span>
+                  <span className="text-slate-400">{visitTime ? formatVisitTimeLabel(visitTime) : "—"}</span>
                 </li>
                 <li className="flex flex-wrap gap-x-2">
                   <span className="font-semibold text-ink">Guests</span>

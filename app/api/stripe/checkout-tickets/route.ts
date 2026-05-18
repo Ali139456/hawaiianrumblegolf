@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
+import { isValidVisitDate, todayIsoLocal } from "@/lib/booking-dates";
 import { getAppOrigin } from "@/lib/app-origin";
+import { parseUsd, usdToCents } from "@/lib/pricing";
 import { site } from "@/lib/site";
 import { getStripeServer } from "@/lib/stripe-server";
-import { slotAllowedOnDate, VISIT_TIME_SLOTS } from "@/lib/visit-time-slots";
 import {
-  getVisitSlotCapacity,
-  getVisitSlotUsage,
-  reserveVisitSlot,
-} from "@/lib/visit-slot-capacity";
+  formatVisitTimeForStripe,
+  isValidVisitTime,
+  slotAllowedOnDate,
+  VISIT_TIME_SLOTS,
+} from "@/lib/visit-time-slots";
 
 const PAYMENT_METHOD_TYPES = ["card", "link"] as const;
 
@@ -21,46 +23,6 @@ type TicketLineItem = {
 };
 const GROUP_MIN_HEAD = 20;
 const MAX_PLAYERS = 100;
-
-function parseUsd(s: string) {
-  const n = Number.parseFloat(String(s).replace(/[^0-9.]/g, ""));
-  return Number.isNaN(n) ? 0 : n;
-}
-
-function toCents(usd: number) {
-  return Math.max(0, Math.round(usd * 100));
-}
-
-/** Match browser `<input type="date" min>` (local calendar day, not UTC-only). */
-function todayIsoLocal() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function isValidVisitDate(iso: string, minIso: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return false;
-  const t = new Date(`${iso}T12:00:00`).getTime();
-  if (Number.isNaN(t)) return false;
-  const minT = new Date(`${minIso}T12:00:00`).getTime();
-  return t >= minT;
-}
-
-const VISIT_TIME_PATTERN = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
-
-function isValidVisitTime(value: string) {
-  return VISIT_TIME_PATTERN.test(value);
-}
-
-function formatVisitTimeForStripe(value: string) {
-  const [h, m] = value.split(":").map((x) => Number.parseInt(x, 10));
-  if (Number.isNaN(h) || Number.isNaN(m)) return value;
-  const d = new Date();
-  d.setHours(h, m, 0, 0);
-  return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-}
 
 type Body = {
   visitDate?: unknown;
@@ -115,21 +77,13 @@ export async function POST(req: Request) {
   if (!visitTime) {
     return NextResponse.json({ error: "Choose an arrival time." }, { status: 400 });
   }
-  if (!isValidVisitTime(visitTime)) {
+  const slotDef = VISIT_TIME_SLOTS.find((s) => s.value === visitTime);
+  if (!slotDef || !isValidVisitTime(visitTime)) {
     return NextResponse.json({ error: "Choose a valid arrival time." }, { status: 400 });
   }
   const minIso = todayIsoLocal();
   if (!isValidVisitDate(visitDate, minIso)) {
     return NextResponse.json({ error: "Visit date must be today or later." }, { status: 400 });
-  }
-  const visitWhen = `${visitDate} · ${formatVisitTimeForStripe(visitTime)}`;
-  if (!Number.isFinite(playersNum) || playersNum < 1 || playersNum > MAX_PLAYERS) {
-    return NextResponse.json({ error: "Select a valid guest count." }, { status: 400 });
-  }
-
-  const slotDef = VISIT_TIME_SLOTS.find((s) => s.value === visitTime);
-  if (!slotDef) {
-    return NextResponse.json({ error: "Choose a valid arrival time." }, { status: 400 });
   }
   if (!slotAllowedOnDate(slotDef, visitDate)) {
     return NextResponse.json(
@@ -137,23 +91,9 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-
-  const slotUsage = await getVisitSlotUsage(visitDate, visitTime);
-  if (slotUsage?.full) {
-    return NextResponse.json(
-      {
-        error: `${formatVisitTimeForStripe(visitTime)} on ${visitDate} is full (${slotUsage.capacity} guests). Pick another time.`,
-      },
-      { status: 409 },
-    );
-  }
-  if (slotUsage && playersNum > slotUsage.remaining) {
-    return NextResponse.json(
-      {
-        error: `Only ${slotUsage.remaining} spot${slotUsage.remaining === 1 ? "" : "s"} left at ${formatVisitTimeForStripe(visitTime)}. Lower guest count or pick another time.`,
-      },
-      { status: 409 },
-    );
+  const visitWhen = `${visitDate} · ${formatVisitTimeForStripe(visitTime)}`;
+  if (!Number.isFinite(playersNum) || playersNum < 1 || playersNum > MAX_PLAYERS) {
+    return NextResponse.json({ error: "Select a valid guest count." }, { status: 400 });
   }
 
   const line_items: TicketLineItem[] = [];
@@ -164,7 +104,7 @@ export async function POST(req: Request) {
       quantity: playersNum,
       price_data: {
         currency: "usd",
-        unit_amount: toCents(unit),
+        unit_amount: usdToCents(unit),
         product_data: {
           name: `${site.rates.leftColumn[0].label} · ${playersNum} guest${playersNum === 1 ? "" : "s"}`,
           description: `Visit ${visitWhen}. Posted rate estimate — specials finalize at the window.`,
@@ -179,7 +119,7 @@ export async function POST(req: Request) {
       quantity: playersNum,
       price_data: {
         currency: "usd",
-        unit_amount: toCents(unit),
+        unit_amount: usdToCents(unit),
         product_data: {
           name: `${site.rates.leftColumn[1].label} · ${playersNum} guest${playersNum === 1 ? "" : "s"}`,
           description: `Visit ${visitWhen}. Another 18 holes same day after a paid first round.`,
@@ -195,7 +135,7 @@ export async function POST(req: Request) {
       quantity: 1,
       price_data: {
         currency: "usd",
-        unit_amount: toCents(unit * head),
+        unit_amount: usdToCents(unit * head),
         product_data: {
           name: `${site.rates.rightColumn[0].label} · ${head} guest${head === 1 ? "" : "s"}`,
           description: `Visit ${visitWhen}. Group estimate (min. ${GROUP_MIN_HEAD} guests for posted per-person rate).`,
@@ -240,28 +180,6 @@ export async function POST(req: Request) {
 
     if (!session.url) {
       return NextResponse.json({ error: "Checkout did not return a URL." }, { status: 500 });
-    }
-
-    const reserved = await reserveVisitSlot(visitDate, visitTime, playersNum, session.id);
-    if (!reserved.ok) {
-      try {
-        await stripe.checkout.sessions.expire(session.id);
-      } catch {
-        /* session may already be unusable */
-      }
-      const cap = reserved.capacity ?? getVisitSlotCapacity();
-      if (reserved.reason === "full") {
-        return NextResponse.json(
-          {
-            error: `${formatVisitTimeForStripe(visitTime)} on ${visitDate} is full (${cap} guests). Pick another time.`,
-          },
-          { status: 409 },
-        );
-      }
-      return NextResponse.json(
-        { error: "Could not reserve that arrival time. Try again or pick another slot." },
-        { status: 409 },
-      );
     }
 
     return NextResponse.json({ url: session.url });
